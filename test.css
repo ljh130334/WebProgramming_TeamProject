@@ -1,0 +1,137 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Arial', sans-serif;
+}
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+  background-color: #fdf6e3;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+h3 {
+  text-align: left;
+}
+
+#startScreen {
+  width: 500px;
+  background: white;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+  text-align: center;
+}
+
+#gameScreen {
+  width: 800px;
+  background: white;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+#infoPanel {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#targetList {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: flex-start;
+  padding: 0;
+  margin-top: 10px;
+}
+
+#targetList li {
+  padding: 5px 10px;
+  background-color: #ffe0b2;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+#gameArea {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 20px;
+}
+
+#info {
+  width: 180px;
+}
+
+#gameCanvas {
+  flex-grow: 1;
+  max-width: 600px;
+  border: 2px solid black;
+  background-color: white;
+}
+
+#remainingList {
+  list-style: none;
+  padding-left: 10px;
+  text-align: left;
+}
+
+#wrapper {
+  width: 500px;
+  background: white;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+  text-align: center;
+}
+
+#gameCanvas {
+  border: 2px solid black;
+  background-color: white;
+  width: 600px;
+  height: 400px;
+}
+
+#timer {
+  font-weight: bold;
+  font-size: 16px;
+  margin-top: 10px;
+}
+
+button {
+  padding: 10px 20px;
+  margin: 10px 5px;
+  background-color: #ffb347;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s;
+}
+
+button:hover {
+  background-color: #ffa500;
+}
+
+select {
+  padding: 5px;
+  margin: 5px;
+  font-size: 14px;
+}
+
+#gameButton {
+  margin-top: 20px;
+}

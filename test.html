@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8">
+  <title>요리 게임</title>
+  <link rel="stylesheet" href="test.css">
+</head>
+
+<body>
+  <div id="startScreen">
+    <h1>요리 게임 시작</h1>
+    <label>요리 선택:
+      <select id="dishSelect">
+        <option value="hamburger">햄버거</option>
+        <option value="pizza">피자</option>
+      </select>
+    </label>
+    <label>난이도 선택:
+      <select id="difficultySelect">
+        <option value="easy">쉬움</option>
+        <option value="normal">보통</option>
+        <option value="hard">어려움</option>
+      </select>
+    </label>
+    <button id="startButton">게임 시작</button>
+  </div>
+
+  <div id="gameScreen" style="display:none;">
+    <div id="infoPanel">
+      <div class="info-left">
+        <h3>성공 조건</h3>
+        <ul id="targetList" class="horizontal-list"></ul>
+      </div>
+      <div class="info-right">
+        <p id="timer">시간: </p>
+      </div>
+    </div>
+    <div id="gameArea">
+      <div id="info">
+        <h3>남은 재료</h3>
+        <ul id="remainingList"></ul>
+      </div>
+      <canvas id="gameCanvas" width="600" height="400"></canvas>
+    </div>
+  </div>
+
+  <div id="wrapper" style="display:none;">
+    <div id="gameResult" style="display:none;">
+      <h1 id="resultMessage"></h1>
+    </div>
+    <div id="gameButton" style="display:none;">
+      <button id="restartButton">다시 시작</button>
+      <button id="homeButton">홈으로</button>
+    </div>
+    <div id="nextLevel" style="display:none;">
+      <h1>다음 레벨 시작까지 <span id="countdown">5</span></h1>
+    </div>
+  </div>
+
+  <script src="test.js"></script>
+</body>
+
+</html>
