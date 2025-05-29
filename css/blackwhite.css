@@ -17,7 +17,6 @@
     opacity: 0.25;
     z-index: 1;
     pointer-events: none;
-    background-image: url('../assets/images/backgrounds/yinyang.png');
 }
 .blackwhite-bg {
     width: 100vw;
@@ -114,10 +113,10 @@
     padding: 0 10px;
 }
 .blackwhite-desc.left {
-    color: #fff;
+    color: #222;
 }
 .blackwhite-desc.right {
-    color: #222;
+    color: #fff;
 }
 .blackwhite-descbox::after {
     content: "";

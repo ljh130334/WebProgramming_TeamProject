@@ -6,7 +6,7 @@ $(document).ready(function() {
 
     $startGameBtn.on('click', function() {
         $mainScreen.hide();
-        $gameScreen.show();
+        $('#black-white').show();
     });
 
     // Sound control bar logic

@@ -12,6 +12,8 @@
         <link rel="stylesheet" href="css/failure.css">
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script src="js/main.js"></script>
+        <script src="js/game/game.js"></script>
+
     </head>
     <body>
         <div id="content">
@@ -38,12 +40,7 @@
                     </div>
                 </div>
             </div>
-            <!-- 게임 화면 -->
-            <div id="game" style="display: none;">
-                <div class="game-background">
-                    <p>게임 화면</p>
-                </div>
-            </div>
+
             <!-- 흑백 선택화면 -->
             <div id="black-white" style="display: none;">
                 <img src="assets/images/backgrounds/yinyang.png" alt="YinYang" class="yinyang-foreground" />
@@ -72,6 +69,19 @@
                   </div>
                 </div>
             </div>
+
+            <!-- 조리도구 선택 화면 -->
+            <div id="tool-select" style="display: none;">
+                <p>조리도구 선택 화면</p>
+            </div>
+
+            <!-- 게임 화면 -->
+            <div id="game" style="display: none;">
+                <div class="game-background">
+                    <p>게임 화면</p>
+                </div>
+            </div>
+
             <!-- 성공 화면 -->
             <div id="success" style="display: none;">
                 <div class="result-background" style="background-image: url('assets/images/backgrounds/success_background.gif');"></div>
