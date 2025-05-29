@@ -1,0 +1,70 @@
+/* 시작화면 */
+#main {
+    position: relative;
+    display: block;
+    background: url('../assets/images/backgrounds/main_background.png') center center/cover no-repeat;
+    text-align: center;
+    overflow: hidden;
+}
+#main::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: #6C6C6C;
+    opacity: 0.7;
+    z-index: 1;
+    pointer-events: none;
+}
+#main .center-wrapper {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    max-width: 600px;
+    z-index: 2;
+}
+.circle-bg {
+    background: url('../assets/images/backgrounds/brushstroke_circle.png') center center/cover no-repeat;
+    width: 400px;
+    height: 400px;
+    border-radius: 50%;
+    margin: 0 auto 30px auto;
+    position: relative;
+    text-align: center;
+    display: block;
+}
+.main-title {
+    font-size: 40px;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 10px;
+    margin-top: 80px;
+}
+.main-subtitle {
+    font-size: 24px;
+    text-align: center;
+    margin-bottom: 30px;
+}
+.main-buttons {
+    width: 80%;
+    margin: 0 auto;
+}
+.main-btn {
+    display: block;
+    width: 100%;
+    margin: 0 auto 15px auto;
+    padding: 15px 0;
+    font-size: 18px;
+    border: none;
+    border-radius: 8px;
+    background: #444;
+    color: #fff;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+.main-btn:last-child {
+    margin-bottom: 0;
+}
+.main-btn:hover {
+    background: #222;
+} 

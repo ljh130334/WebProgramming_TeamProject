@@ -1,0 +1,126 @@
+/* 흑백 선택 화면 */
+#black-white {
+    display: block;
+    background: #5A5A5A;
+    position: absolute;
+    top: 0; left: 0; width: 100vw; height: 100vh;
+    overflow: hidden;
+}
+.yinyang-foreground {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 60vw;
+    max-width: 700px;
+    min-width: 300px;
+    opacity: 0.25;
+    z-index: 1;
+    pointer-events: none;
+    background-image: url('../assets/images/backgrounds/yinyang.png');
+}
+.blackwhite-bg {
+    width: 100vw;
+    height: 100vh;
+    position: relative;
+    z-index: 2;
+}
+.blackwhite-center-group {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -60%);
+    width: 820px;
+    min-width: 320px;
+}
+.blackwhite-center {
+    text-align: center;
+    margin-bottom: 18px;
+}
+.blackwhite-title {
+    font-size: 45px;
+    font-weight: bold;
+    color: #444;
+    margin-bottom: 10px;
+}
+.blackwhite-title b {
+    color: #222;
+}
+.blackwhite-subtitle {
+    font-size: 21px;
+    color: #888;
+    margin-bottom: 10px;
+}
+.blackwhite-centerbox {
+    width: 800px;
+    min-width: 300px;
+    background: rgba(200,200,200,0.7);
+    border-radius: 10px;
+    margin: 0 auto 30px auto;
+    position: relative;
+    height: 220px;
+    overflow: hidden;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+    display: flex;
+    flex-direction: row;
+    padding: 0;
+}
+.blackwhite-half {
+    width: 50%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background 0.2s;
+    position: relative;
+}
+.blackwhite-left {
+    border-right: 2px solid #aaa;
+    background: #111;
+}
+.blackwhite-right {
+    background: #fff;
+}
+.blackwhite-char {
+    width: 160px;
+    height: auto;
+    filter: grayscale(0.7) drop-shadow(2px 2px 4px #333);
+    display: block;
+    margin: 0 auto;
+}
+.blackwhite-centerbox::after {
+    content: "";
+    display: table;
+    clear: both;
+}
+.blackwhite-half:hover {
+    background: rgba(255,255,255,0.25);
+}
+.blackwhite-descbox {
+    width: 800px;
+    min-width: 320px;
+    margin: 40px auto 0 auto;
+    z-index: 3;
+}
+.blackwhite-desc {
+    width: 50%;
+    float: left;
+    color: #fff;
+    font-size: 18px;
+    text-align: center;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0 10px;
+}
+.blackwhite-desc.left {
+    color: #fff;
+}
+.blackwhite-desc.right {
+    color: #222;
+}
+.blackwhite-descbox::after {
+    content: "";
+    display: table;
+    clear: both;
+} 

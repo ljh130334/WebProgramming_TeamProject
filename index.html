@@ -5,307 +5,16 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>메인 화면</title>
-        <style>
-            * {
-               margin: 0;
-               padding: 0;
-            }
-            body, html {
-                height: 100%;
-            }
-            body {
-                height: 100vh;
-                width: 100vw;
-                position: relative;
-            }
-            #content {
-                height: 100vh;
-                width: 100vw;
-                position: relative;
-            }
-            /* Common style for all screens */
-            #main, #black-white, #success, #failure {
-                position: absolute;
-                top: 0;
-                left: 0;
-                width: 100vw;
-                height: 100vh;
-                display: none;
-            }
-            #main {
-                position: relative;
-                display: block;
-                background: url('assets/images/backgrounds/main_background.png') center center/cover no-repeat;
-                text-align: center;
-                overflow: hidden;
-            }
-            #main::before {
-                content: '';
-                position: absolute;
-                top: 0; left: 0; right: 0; bottom: 0;
-                background: #6C6C6C;
-                opacity: 0.7;
-                z-index: 1;
-                pointer-events: none;
-            }
-            #main .center-wrapper {
-                position: absolute;
-                top: 50%; left: 50%;
-                transform: translate(-50%, -50%);
-                width: 100%;
-                max-width: 600px;
-                z-index: 2;
-            }
-            #black-white {
-                display: block;
-                background: #5A5A5A;
-                position: absolute;
-                top: 0; left: 0; width: 100vw; height: 100vh;
-                overflow: hidden;
-            }
-            .yinyang-foreground {
-                position: absolute;
-                top: 50%;
-                left: 50%;
-                transform: translate(-50%, -50%);
-                width: 60vw;
-                max-width: 700px;
-                min-width: 300px;
-                opacity: 0.25;
-                z-index: 1;
-                pointer-events: none;
-            }
-            #success {
-                position: relative;
-                display: block;
-            }
-            .result-background {
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                z-index: -1;
-                background-size: cover;
-                background-position: center;
-                background-repeat: no-repeat;
-                opacity: 0.6;
-            }
-            #failure {
-                background: url('https://via.placeholder.com/1200x800?text=Failure+Screen') center center/cover no-repeat;
-            }
-            .circle-bg {
-                background: url('https://via.placeholder.com/400x400?text=Brushstroke+Circle') center center/cover no-repeat;
-                width: 400px;
-                height: 400px;
-                border-radius: 50%;
-                margin: 0 auto 30px auto;
-                position: relative;
-                text-align: center;
-                display: block;
-            }
-            .main-title {
-                font-size: 2.5rem;
-                font-weight: bold;
-                text-align: center;
-                margin-bottom: 10px;
-                margin-top: 80px;
-            }
-            .main-subtitle {
-                font-size: 1.5rem;
-                text-align: center;
-                margin-bottom: 30px;
-            }
-            .main-buttons {
-                width: 80%;
-                margin: 0 auto;
-            }
-            .main-btn {
-                display: block;
-                width: 100%;
-                margin: 0 auto 15px auto;
-                padding: 15px 0;
-                font-size: 1.1rem;
-                border: none;
-                border-radius: 8px;
-                background: #444;
-                color: #fff;
-                cursor: pointer;
-                transition: background 0.2s;
-            }
-            .main-btn:last-child {
-                margin-bottom: 0;
-            }
-            .main-btn:hover {
-                background: #222;
-            }
-            .blackwhite-bg {
-                width: 100vw;
-                height: 100vh;
-                position: relative;
-                z-index: 2;
-            }
-            .blackwhite-center-group {
-                position: absolute;
-                top: 50%;
-                left: 50%;
-                transform: translate(-50%, -60%);
-                width: 820px;
-                min-width: 320px;
-            }
-            .blackwhite-center {
-                text-align: center;
-                margin-bottom: 18px;
-            }
-            .blackwhite-title {
-                font-size: 2.8rem;
-                font-weight: bold;
-                color: #444;
-                margin-bottom: 10px;
-            }
-            .blackwhite-title b {
-                color: #222;
-            }
-            .blackwhite-subtitle {
-                font-size: 1.3rem;
-                color: #888;
-                margin-bottom: 10px;
-            }
-            .blackwhite-centerbox {
-                width: 800px;
-                min-width: 300px;
-                background: rgba(200,200,200,0.7);
-                border-radius: 10px;
-                margin: 0 auto 30px auto;
-                position: relative;
-                height: 220px;
-                overflow: hidden;
-                box-shadow: 0 2px 12px rgba(0,0,0,0.08);
-                display: flex;
-                flex-direction: row;
-                padding: 0;
-            }
-            .blackwhite-half {
-                width: 50%;
-                height: 100%;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                cursor: pointer;
-                transition: background 0.2s;
-                position: relative;
-            }
-            .blackwhite-left {
-                border-right: 2px solid #aaa;
-                background: #111;
-            }
-            .blackwhite-right {
-                background: #fff;
-            }
-            .blackwhite-char {
-                width: 160px;
-                height: auto;
-                filter: grayscale(0.7) drop-shadow(2px 2px 4px #333);
-                display: block;
-                margin: 0 auto;
-            }
-            .blackwhite-centerbox::after {
-                content: "";
-                display: table;
-                clear: both;
-            }
-            .blackwhite-half:hover {
-                background: rgba(255,255,255,0.25);
-            }
-            .blackwhite-descbox {
-                width: 800px;
-                min-width: 320px;
-                margin: 40px auto 0 auto;
-                z-index: 3;
-            }
-            .blackwhite-desc {
-                width: 50%;
-                float: left;
-                color: #fff;
-                font-size: 1.1rem;
-                text-align: center;
-                box-sizing: border-box;
-                margin: 0;
-                padding: 0 10px;
-            }
-            .blackwhite-desc.left {
-                color: #fff;
-            }
-            .blackwhite-desc.right {
-                color: #222;
-            }
-            .blackwhite-descbox::after {
-                content: "";
-                display: table;
-                clear: both;
-            }
-            .success-timer {
-                position: absolute;
-                top: 30px;
-                right: 40px;
-                color: #fff;
-                font-size: 2rem;
-                font-weight: 400;
-                z-index: 2;
-                text-shadow: 0 2px 8px rgba(0,0,0,0.25);
-            }
-            .success-main-text {
-                position: absolute;
-                top: 45%;
-                left: 50%;
-                transform: translate(-50%, -50%);
-                font-size: 3.5rem;
-                font-weight: bold;
-                color: #333;
-                text-align: center;
-                z-index: 2;
-                width: 100vw;
-            }
-            .success-sub-text {
-                position: absolute;
-                top: 55%;
-                left: 50%;
-                transform: translate(-50%, 0);
-                font-size: 2rem;
-                color: #fff;
-                text-align: center;
-                z-index: 2;
-                width: 100vw;
-            }
-            .failure-main-text {
-                position: absolute;
-                top: 45%;
-                left: 50%;
-                transform: translate(-50%, -50%);
-                font-size: 3.5rem;
-                font-weight: bold;
-                color: #333;
-                text-align: center;
-                z-index: 2;
-                width: 100vw;
-            }
-            .failure-sub-text {
-                position: absolute;
-                top: 55%;
-                left: 50%;
-                transform: translate(-50%, 0);
-                font-size: 2rem;
-                color: #fff;
-                text-align: center;
-                z-index: 2;
-                width: 100vw;
-            }
-        </style>
+        <link rel="stylesheet" href="css/common.css">
+        <link rel="stylesheet" href="css/main.css">
+        <link rel="stylesheet" href="css/blackwhite.css">
+        <link rel="stylesheet" href="css/success.css">
+        <link rel="stylesheet" href="css/failure.css">
     </head>
     <body>
         <div id="content">
             <!-- 시작 화면 -->
-            <div id="main" style="display: none;">
+            <div id="main" style="display: block;">
                 <div class="center-wrapper">
                     <div class="circle-bg">
                         <div class="main-title">“흑 VS 백”</div>
@@ -350,13 +59,20 @@
             <!-- 성공 화면 -->
             <div id="success" style="display: none;">
                 <div class="result-background" style="background-image: url('assets/images/backgrounds/success_background.gif');"></div>
-                <div class="success-timer">15초 뒤 다음 스테이지로 이동합니다.</div>
+                <div class="success-timer">
+                    <p>15초 뒤 다음 스테이지로 이동합니다.</p>
+                    <img src="assets/images/ui/back_white.png" alt="back" />
+                </div>
                 <div class="success-main-text">맛있어요. 진짜 맛있어요.</div>
                 <div class="success-sub-text">생존하셨습니다.</div>
             </div>
             <!-- 실패 화면 -->
-            <div id="failure" style="display: block;">
+            <div id="failure" style="display: none;">
                 <div class="result-background" style="background-image: url('assets/images/backgrounds/fail_background.gif');"></div>
+                <div class="failure-timer">
+                    <p>15초 뒤 다시 도전할 수 있습니다.</p>
+                    <img src="assets/images/ui/back_white.png" alt="back" />
+                </div>
                 <div class="failure-main-text">이븐하지 않잖아요!</div>
                 <div class="failure-sub-text">다시 시도해보세요.</div>
             </div>
