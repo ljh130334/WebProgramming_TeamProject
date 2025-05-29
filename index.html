@@ -10,6 +10,8 @@
         <link rel="stylesheet" href="css/blackwhite.css">
         <link rel="stylesheet" href="css/success.css">
         <link rel="stylesheet" href="css/failure.css">
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script src="js/main.js"></script>
     </head>
     <body>
         <div id="content">
@@ -20,12 +22,26 @@
                         <div class="main-title">“흑 VS 백”</div>
                         <div class="main-subtitle">요리사</div>
                         <div class="main-buttons">
-                            <button class="main-btn">게임시작</button>
-                            <button class="main-btn">옵션</button>
-                            <button class="main-btn">난이도 설정</button>
-                            <button class="main-btn">조리도구 바꾸기</button>
+                            <button class="main-btn" id="start-game-btn">게임시작</button>
+                            <button class="main-btn" id="options-btn">옵션</button>
+                            <button class="main-btn" id="difficulty-btn">난이도 설정</button>
+                            <button class="main-btn" id="change-tool-btn">조리도구 바꾸기</button>
+                        </div>
+                        <div id="sound-control-bar" style="display: none; margin-top: 20px;">
+                            <div class="custom-volume-control">
+                              <img src="assets/images/ui/volume_min.svg" alt="Volume Min" class="volume-icon volume-min">
+                              <input type="range" min="0" max="100" value="100" class="volume-slider" id="main-volume-range">
+                              <img src="assets/images/ui/volume_max.svg" alt="Volume Max" class="volume-icon volume-max">
+                            </div>
+                            <audio id="main-bgm" src="assets/sounds/bgm/bgm.mp3" loop preload="auto"></audio>
                         </div>
                     </div>
+                </div>
+            </div>
+            <!-- 게임 화면 -->
+            <div id="game" style="display: none;">
+                <div class="game-background">
+                    <p>게임 화면</p>
                 </div>
             </div>
             <!-- 흑백 선택화면 -->
