@@ -7,5 +7,5 @@ $(document).on('click', '#tool-select .tool', function() {
   window.selectedTool = toolName;
   // Hide tool-select, show game
   $('#tool-select').hide();
-  $('#game').show();
+  $('#difficulty-select').show();
 });

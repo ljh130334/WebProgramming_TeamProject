@@ -11,10 +11,12 @@
         <link rel="stylesheet" href="css/success.css">
         <link rel="stylesheet" href="css/failure.css">
         <link rel="stylesheet" href="css/tools.css">
+        <link rel="stylesheet" href="css/difficulty.css">
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script src="js/main.js"></script>
         <script src="js/game/game.js"></script>
         <script src="js/screens/tools.js"></script>
+        <script src="js/screens/difficulty.js"></script>
 
 
     </head>
@@ -29,8 +31,6 @@
                         <div class="main-buttons">
                             <button class="main-btn" id="start-game-btn">게임시작</button>
                             <button class="main-btn" id="options-btn">옵션</button>
-                            <button class="main-btn" id="difficulty-btn">난이도 설정</button>
-                            <button class="main-btn" id="change-tool-btn">조리도구 바꾸기</button>
                         </div>
                         <div id="sound-control-bar" style="display: none; margin-top: 20px;">
                             <div class="custom-volume-control">
@@ -80,10 +80,24 @@
                   <div class="title">“흑 VS 백”</div>
                   <div class="subtitle">원하는 조리도구를 고르세요</div>
                 </div>
-                <img class="tool tool-top-left" src="assets/images/tools/wok.png" alt="Black Wok">
-                <img class="tool tool-top-right disabled" src="assets/images/tools/golden_pan_disabled.png" alt="Gold Pan (disabled)">
-                <img class="tool tool-bottom-left disabled" src="assets/images/tools/golden_turner_disabled.png" alt="Gold Turner (disabled)">
-                <img class="tool tool-bottom-right" src="assets/images/tools/knife.png" alt="Knife">
+                <img class="tool tool-top-left" src="assets/images/tools/wok.png" alt="Black Wok" data-tool="Wok">
+                <img class="tool tool-top-right disabled" src="assets/images/tools/golden_pan_disabled.png" alt="Gold Pan (disabled)" data-tool="Gold Pan">
+                <img class="tool tool-bottom-left disabled" src="assets/images/tools/golden_turner_disabled.png" alt="Gold Turner (disabled)" data-tool="Gold Turner">
+                <img class="tool tool-bottom-right" src="assets/images/tools/knife.png" alt="Knife" data-tool="Knife">
+            </div>
+
+            <!-- 난이도 선택 화면 -->
+            <div id="difficulty-select" style="display: none;">
+                <div class="background-image"></div>
+                <div class="difficulty-content">
+                  <div class="title">“흑 VS 백”</div>
+                  <div class="subtitle">원하는 난이도를 고르세요</div>
+                  <div class="difficulty-row">
+                    <img class="difficulty-img" src="assets/images/ui/difficulty_easy.png" alt="Easy">
+                    <img class="difficulty-img" src="assets/images/ui/difficulty_normal.png" alt="Normal">
+                    <img class="difficulty-img" src="assets/images/ui/difficulty_hard.png" alt="Hard">
+                  </div>
+                </div>
             </div>
 
             <!-- 게임 화면 -->
