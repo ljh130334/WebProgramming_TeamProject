@@ -1,0 +1,173 @@
+/* 시작화면 */
+#main {
+    position: relative;
+    display: block;
+    background: url('../assets/images/backgrounds/main_background.png') center center/cover no-repeat;
+    text-align: center;
+    overflow: hidden;
+}
+#main::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: #6C6C6C;
+    opacity: 0.7;
+    z-index: 1;
+    pointer-events: none;
+}
+#main .center-wrapper {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    max-width: 600px;
+    z-index: 2;
+}
+.circle-bg {
+    width: 400px;
+    height: 400px;
+    border-radius: 50%;
+    margin: 0 auto 30px auto;
+    position: relative;
+    text-align: center;
+    display: block;
+}
+.main-title {
+    font-size: 40px;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 10px;
+    margin-top: 80px;
+}
+.main-subtitle {
+    font-size: 24px;
+    text-align: center;
+    margin-bottom: 30px;
+}
+.main-buttons {
+    width: 80%;
+    margin: 0 auto;
+}
+.main-btn {
+    display: block;
+    width: 100%;
+    margin: 0 auto 15px auto;
+    padding: 15px 0;
+    font-size: 18px;
+    border: none;
+    border-radius: 8px;
+    background: #444;
+    color: #fff;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+.main-btn:last-child {
+    margin-bottom: 0;
+}
+.main-btn:hover {
+    background: #222;
+}
+.volume-slider {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin-left: 0;
+}
+#main-volume-range {
+    width: 120px;
+}
+.volume-slider label {
+    font-size: 18px;
+    user-select: none;
+}
+
+/* Custom Volume Control Styles */
+#sound-control-bar {
+    display: none;
+}
+
+.custom-volume-control {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+  background: rgba(180, 180, 180, 0.3);
+  padding: 16px 24px;
+  border-radius: 16px;
+  box-sizing: border-box;
+}
+
+.custom-volume-control .volume-icon {
+    width: 36px;
+    height: 36px;
+    flex-shrink: 0;
+    opacity: 0.85;
+}
+
+.custom-volume-control .volume-slider {
+    flex: 1;
+    margin: 0 16px;
+    height: 6px;
+    background: transparent; /* Let the track pseudo-element handle the color */
+    border-radius: 3px;
+    appearance: none;
+    outline: none;
+    position: relative;
+}
+
+/* Webkit (Chrome, Safari, Edge) */
+.custom-volume-control .volume-slider::-webkit-slider-thumb {
+    appearance: none;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: #333;
+    border: 2px solid #fff;
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    margin-top: -8px; /* Center the thumb on the 6px track: (22-6)/2 = 8 */
+}
+.custom-volume-control .volume-slider::-webkit-slider-runnable-track {
+    height: 6px;
+    background: #e0e0e0;
+    border-radius: 3px;
+}
+
+/* Firefox */
+.custom-volume-control .volume-slider::-moz-range-thumb {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: #333;
+    border: 2px solid #fff;
+    cursor: pointer;
+}
+.custom-volume-control .volume-slider::-moz-range-track {
+    height: 6px;
+    background: #e0e0e0;
+    border-radius: 3px;
+}
+
+/* IE/Edge */
+.custom-volume-control .volume-slider::-ms-thumb {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: #333;
+    border: 2px solid #fff;
+    cursor: pointer;
+}
+.custom-volume-control .volume-slider::-ms-fill-lower,
+.custom-volume-control .volume-slider::-ms-fill-upper {
+    background: #e0e0e0;
+    border-radius: 3px;
+}
+
+.custom-volume-control .volume-slider:focus {
+    outline: none;
+}
+
+.custom-volume-control .volume-slider {
+    background: transparent;
+} 
