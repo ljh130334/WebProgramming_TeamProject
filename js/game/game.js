@@ -2,8 +2,9 @@
 
 console.log('game.js loaded');
 
-// Global variable for game mode
-window.game_mode = null;
+// 게임에서 사용할 전역 변수 
+window.game_mode = null; // 흑백 선택 여부
+window.selectedTool = null; // 선택된 조리도구
 
 // Black/White selection logic
 $(document).on('click', '.blackwhite-half.blackwhite-left', function() {
@@ -19,4 +20,26 @@ $(document).on('click', '.blackwhite-half.blackwhite-right', function() {
     console.log('game_mode', window.game_mode);
     $('#black-white').hide();
     $('#tool-select').show();
+});
+
+// When #game is shown, log game_mode and selectedTool
+const observeGameDiv = () => {
+  const gameDiv = document.getElementById('game');
+  if (!gameDiv) return;
+  const observer = new MutationObserver((mutations) => {
+    mutations.forEach((mutation) => {
+      if (
+        mutation.attributeName === 'style' &&
+        $(gameDiv).is(':visible')
+      ) {
+        console.log('Game mode:', window.game_mode);
+        console.log('Selected tool:', window.selectedTool);
+      }
+    });
+  });
+  observer.observe(gameDiv, { attributes: true, attributeFilter: ['style'] });
+};
+
+$(document).ready(function() {
+  observeGameDiv();
 });

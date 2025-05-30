@@ -10,9 +10,12 @@
         <link rel="stylesheet" href="css/blackwhite.css">
         <link rel="stylesheet" href="css/success.css">
         <link rel="stylesheet" href="css/failure.css">
+        <link rel="stylesheet" href="css/tools.css">
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script src="js/main.js"></script>
         <script src="js/game/game.js"></script>
+        <script src="js/screens/tools.js"></script>
+
 
     </head>
     <body>
@@ -72,7 +75,15 @@
 
             <!-- 조리도구 선택 화면 -->
             <div id="tool-select" style="display: none;">
-                <p>조리도구 선택 화면</p>
+                <div class="background-image"></div>
+                <div class="center-text">
+                  <div class="title">“흑 VS 백”</div>
+                  <div class="subtitle">원하는 조리도구를 고르세요</div>
+                </div>
+                <img class="tool tool-top-left" src="assets/images/tools/wok.png" alt="Black Wok">
+                <img class="tool tool-top-right disabled" src="assets/images/tools/golden_pan_disabled.png" alt="Gold Pan (disabled)">
+                <img class="tool tool-bottom-left disabled" src="assets/images/tools/golden_turner_disabled.png" alt="Gold Turner (disabled)">
+                <img class="tool tool-bottom-right" src="assets/images/tools/knife.png" alt="Knife">
             </div>
 
             <!-- 게임 화면 -->
