@@ -310,3 +310,32 @@
     box-shadow: inset 0 0 50px rgba(255, 107, 53, 0.5);
   }
 }
+
+#black-white .progress-indicator {
+  position: absolute;
+  top: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 15px;
+  z-index: 4;
+}
+
+#black-white .progress-dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+  transition: all 0.3s ease;
+}
+
+#black-white .progress-dot.completed {
+  background: #ff6b35;
+  box-shadow: 0 0 15px rgba(255, 107, 53, 0.5);
+}
+
+#black-white .progress-dot.current {
+  background: #fff;
+  transform: scale(1.4);
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.8);
+}

@@ -26,6 +26,7 @@
     <script src="js/game/game.js"></script>
     <script src="js/screens/tools.js"></script>
     <script src="js/screens/difficulty.js"></script>
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
   </head>
   <body>
     <div id="content">
@@ -153,6 +154,13 @@
           alt="YinYang"
           class="yinyang-foreground"
         />
+        <!-- 진행 표시기 -->
+        <div class="progress-indicator">
+          <div class="progress-dot current"></div>
+          <div class="progress-dot"></div>
+          <div class="progress-dot"></div>
+          <div class="progress-dot"></div>
+        </div>
         <div class="blackwhite-bg">
           <div class="blackwhite-center-group">
             <div class="blackwhite-center">
@@ -192,35 +200,75 @@
 
       <!-- 조리도구 선택 화면 -->
       <div id="tool-select" style="display: none">
+        <!-- 배경 이미지 -->
         <div class="background-image"></div>
+
+        <!-- 진행 표시기 -->
+        <div class="progress-indicator">
+          <div class="progress-dot completed"></div>
+          <div class="progress-dot current"></div>
+          <div class="progress-dot"></div>
+          <div class="progress-dot"></div>
+        </div>
+
+        <!-- 중앙 텍스트 -->
         <div class="center-text">
-          <div class="title">"흑 VS 백"</div>
+          <div class="title">"흑 <b>VS</b> 백"</div>
           <div class="subtitle">원하는 조리도구를 고르세요</div>
         </div>
-        <img
-          class="tool tool-top-left"
-          src="assets/images/tools/wok.png"
-          alt="Black Wok"
-          data-tool="Wok"
-        />
-        <img
-          class="tool tool-top-right disabled"
-          src="assets/images/tools/golden_pan_disabled.png"
-          alt="Gold Pan (disabled)"
-          data-tool="Gold Pan"
-        />
-        <img
-          class="tool tool-bottom-left disabled"
-          src="assets/images/tools/golden_turner_disabled.png"
-          alt="Gold Turner (disabled)"
-          data-tool="Gold Turner"
-        />
-        <img
-          class="tool tool-bottom-right"
-          src="assets/images/tools/knife.png"
-          alt="Knife"
-          data-tool="Knife"
-        />
+
+        <!-- 도구 컨테이너 -->
+        <div class="tools-container">
+          <!-- 웍 (활성화) -->
+          <div class="tool-wrapper">
+            <img
+              class="tool tool-top-left"
+              src="assets/images/tools/wok.png"
+              alt="Black Wok"
+              data-tool="Wok"
+            />
+            <div class="tool-name">웍 (Wok)</div>
+          </div>
+
+          <!-- 골든 팬 (비활성화) -->
+          <div class="tool-wrapper">
+            <img
+              class="tool tool-top-right disabled"
+              src="assets/images/tools/golden_pan_disabled.png"
+              alt="Gold Pan (disabled)"
+              data-tool="Gold Pan"
+            />
+            <div class="tool-name">황금 팬 (Gold Pan)</div>
+          </div>
+
+          <!-- 골든 뒤집개 (비활성화) -->
+          <div class="tool-wrapper">
+            <img
+              class="tool tool-bottom-left disabled"
+              src="assets/images/tools/golden_turner_disabled.png"
+              alt="Gold Turner (disabled)"
+              data-tool="Gold Turner"
+            />
+            <div class="tool-name">황금 뒤집개 (Gold Turner)</div>
+          </div>
+
+          <!-- 나이프 (활성화) -->
+          <div class="tool-wrapper">
+            <img
+              class="tool tool-bottom-right"
+              src="assets/images/tools/knife.png"
+              alt="Knife"
+              data-tool="Knife"
+            />
+            <div class="tool-name">나이프 (Knife)</div>
+          </div>
+        </div>
+
+        <!-- 도구 설명 패널 -->
+        <div class="tool-description" id="tool-description">
+          <h3>도구를 선택하세요</h3>
+          <p>마우스를 올려서 각 도구의 특성을 확인할 수 있습니다.</p>
+        </div>
       </div>
 
       <!-- 난이도 선택 화면 -->
