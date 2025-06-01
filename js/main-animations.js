@@ -1,4 +1,4 @@
-// 메인 화면 애니메이션 효과들
+// 메인 화면 애니메이션 효과들 - 설정 시스템 연동
 $(document).ready(function () {
   // 페이지 로드 시 애니메이션 시작
   initMainAnimations();
@@ -83,13 +83,13 @@ function startTypingEffect() {
   setTimeout(typeTitle, 1000);
 }
 
-// 2. 강화된 불꽃 파티클 생성
+// 2. 강화된 불꽃 파티클 생성 (설정 연동)
 function createEnhancedFireParticles() {
   const particleTypes = ["small", "medium", "large"];
 
   // 지속적인 작은 불꽃들
   setInterval(() => {
-    if ($("#main").is(":visible")) {
+    if ($("#main").is(":visible") && !window.particlesDisabled) {
       for (let i = 0; i < 5; i++) {
         const type =
           particleTypes[Math.floor(Math.random() * particleTypes.length)];
@@ -113,7 +113,7 @@ function createEnhancedFireParticles() {
 
   // 큰 불꽃 폭발 효과
   setInterval(() => {
-    if ($("#main").is(":visible")) {
+    if ($("#main").is(":visible") && !window.particlesDisabled) {
       const $explosion = $('<div class="fire-explosion"></div>');
       $explosion.css({
         left: Math.random() * 100 + "%",
@@ -146,7 +146,7 @@ function createEnhancedFireParticles() {
   }, 3000);
 }
 
-// 3. 마우스 효과 추가
+// 3. 마우스 효과 추가 (설정 연동)
 function addMouseEffects() {
   let mouseX = 0;
   let mouseY = 0;
@@ -156,18 +156,23 @@ function addMouseEffects() {
     mouseX = e.pageX;
     mouseY = e.pageY;
 
-    // 마우스 트레일 생성
-    createMouseTrail(mouseX, mouseY);
+    // 파티클이 활성화된 경우에만 효과 생성
+    if (!window.particlesDisabled) {
+      // 마우스 트레일 생성
+      createMouseTrail(mouseX, mouseY);
 
-    // 마우스 파티클 생성
-    if (Math.random() < 0.3) {
-      createMouseParticle(mouseX, mouseY);
+      // 마우스 파티클 생성 (확률적으로)
+      if (Math.random() < 0.3) {
+        createMouseParticle(mouseX, mouseY);
+      }
     }
   });
 
   // 마우스 클릭 시 특별한 효과
   $("#main").click(function (e) {
-    createMouseClickEffect(e.pageX, e.pageY);
+    if (!window.particlesDisabled) {
+      createMouseClickEffect(e.pageX, e.pageY);
+    }
   });
 }
 
@@ -237,7 +242,7 @@ function createMouseClickEffect(x, y) {
   }, 1500);
 }
 
-// 떨어지는 요리 재료 생성
+// 떨어지는 요리 재료 생성 (설정 연동)
 function createFallingIngredients() {
   const ingredients = [
     "🥕",
@@ -253,7 +258,7 @@ function createFallingIngredients() {
   ];
 
   setInterval(() => {
-    if ($("#main").is(":visible")) {
+    if ($("#main").is(":visible") && !window.particlesDisabled) {
       const ingredient =
         ingredients[Math.floor(Math.random() * ingredients.length)];
       const $fallingItem = $('<div class="falling-ingredients"></div>');
@@ -273,9 +278,9 @@ function createFallingIngredients() {
   }, 1500);
 }
 
-// 셰프 모자 생성
+// 셰프 모자 생성 (설정 연동)
 function createChefHats() {
-  const hats = ["🧑🏻‍🍳", "👩🏻‍🍳", "👨🏻‍🍳"];
+  const hats = ["👨‍🍳", "👩‍🍳", "🧑‍🍳"];
 
   for (let i = 0; i < 2; i++) {
     const $hat = $('<div class="chef-hat"></div>');
@@ -315,8 +320,10 @@ function addButtonEffects() {
   });
 }
 
-// 클릭 시 파티클 생성
+// 클릭 시 파티클 생성 (설정 연동)
 function createClickParticles(event) {
+  if (window.particlesDisabled) return; // 파티클이 비활성화된 경우 실행하지 않음
+
   const colors = ["#ff6b35", "#f7931e", "#ffaa4d", "#ff8c42"];
 
   for (let i = 0; i < 8; i++) {

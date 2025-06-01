@@ -1,4 +1,3 @@
-<!-- 메인 HTML 파일 (시작화면) -->
 <!DOCTYPE html>
 <html lang="ko">
   <head>
@@ -7,6 +6,7 @@
     <title>메인 화면</title>
     <link rel="stylesheet" href="css/common.css" />
     <link rel="stylesheet" href="css/main.css" />
+    <link rel="stylesheet" href="css/settings.css" />
     <link rel="stylesheet" href="css/blackwhite.css" />
     <link rel="stylesheet" href="css/success.css" />
     <link rel="stylesheet" href="css/failure.css" />
@@ -17,6 +17,7 @@
       rel="stylesheet"
     />
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="js/screens/settings.js"></script>
     <script src="js/main.js"></script>
     <script src="js/main-animations.js"></script>
     <script src="js/game/game.js"></script>
@@ -35,27 +36,105 @@
               <button class="main-btn" id="start-game-btn">게임시작</button>
               <button class="main-btn" id="options-btn">옵션</button>
             </div>
-            <div id="sound-control-bar" style="display: none; margin-top: 20px">
-              <div class="custom-volume-control">
-                <img
-                  src="assets/images/ui/volume_min.svg"
-                  alt="Volume Min"
-                  class="volume-icon volume-min"
-                />
-                <input
-                  type="range"
-                  min="0"
-                  max="100"
-                  value="100"
-                  class="volume-slider"
-                  id="main-volume-range"
-                />
-                <img
-                  src="assets/images/ui/volume_max.svg"
-                  alt="Volume Max"
-                  class="volume-icon volume-max"
-                />
+            <div id="settings-panel" style="display: none; margin-top: 20px">
+              <div class="settings-container">
+                <!-- 설정 헤더 -->
+                <div class="settings-header">
+                  <h3 class="settings-title">⚙️ 오디오 설정</h3>
+                  <button class="settings-close-btn" id="settings-close">
+                    ✕
+                  </button>
+                </div>
+
+                <!-- 배경음악 설정 -->
+                <div class="settings-section">
+                  <div class="settings-label">
+                    <span class="settings-icon">🔊</span>
+                    <span class="settings-text">배경음악</span>
+                    <span class="volume-percentage" id="volume-display"
+                      >50%</span
+                    >
+                  </div>
+                  <div class="custom-volume-control">
+                    <img
+                      src="assets/images/ui/volume_min.svg"
+                      alt="Volume Min"
+                      class="volume-icon volume-min"
+                    />
+                    <input
+                      type="range"
+                      min="0"
+                      max="100"
+                      value="50"
+                      class="volume-slider"
+                      id="main-volume-range"
+                    />
+                    <img
+                      src="assets/images/ui/volume_max.svg"
+                      alt="Volume Max"
+                      class="volume-icon volume-max"
+                    />
+                  </div>
+                </div>
+
+                <!-- 효과음 설정 -->
+                <div class="settings-section">
+                  <div class="settings-label">
+                    <span class="settings-icon">🎵</span>
+                    <span class="settings-text">효과음</span>
+                    <span class="volume-percentage" id="sfx-display">70%</span>
+                  </div>
+                  <div class="custom-volume-control">
+                    <img
+                      src="assets/images/ui/volume_min.svg"
+                      alt="Volume Min"
+                      class="volume-icon volume-min"
+                    />
+                    <input
+                      type="range"
+                      min="0"
+                      max="100"
+                      value="70"
+                      class="volume-slider"
+                      id="sfx-volume-range"
+                    />
+                    <img
+                      src="assets/images/ui/volume_max.svg"
+                      alt="Volume Max"
+                      class="volume-icon volume-max"
+                    />
+                  </div>
+                </div>
+
+                <!-- 화면 효과 설정 -->
+                <div class="settings-section">
+                  <div class="settings-label">
+                    <span class="settings-icon">✨</span>
+                    <span class="settings-text">화면 효과</span>
+                  </div>
+                  <div class="settings-toggles">
+                    <label class="settings-toggle">
+                      <input type="checkbox" id="particles-toggle" checked />
+                      <span class="toggle-slider"></span>
+                      <span class="toggle-text">파티클 효과</span>
+                    </label>
+                    <label class="settings-toggle">
+                      <input type="checkbox" id="animations-toggle" checked />
+                      <span class="toggle-slider"></span>
+                      <span class="toggle-text">애니메이션</span>
+                    </label>
+                  </div>
+                </div>
+
+                <!-- 설정 초기화 -->
+                <div class="settings-footer">
+                  <button class="settings-reset-btn" id="settings-reset">
+                    🔄 설정 초기화
+                  </button>
+                </div>
               </div>
+
+              <!-- 배경음악 오디오 태그 -->
               <audio
                 id="main-bgm"
                 src="assets/sounds/bgm/bgm.mp3"
@@ -77,7 +156,7 @@
         <div class="blackwhite-bg">
           <div class="blackwhite-center-group">
             <div class="blackwhite-center">
-              <div class="blackwhite-title">“흑 <b>VS</b> 백”</div>
+              <div class="blackwhite-title">"흑 <b>VS</b> 백"</div>
               <div class="blackwhite-subtitle">
                 흑과 백 중 하나를 선택하세요
               </div>
@@ -115,7 +194,7 @@
       <div id="tool-select" style="display: none">
         <div class="background-image"></div>
         <div class="center-text">
-          <div class="title">“흑 VS 백”</div>
+          <div class="title">"흑 VS 백"</div>
           <div class="subtitle">원하는 조리도구를 고르세요</div>
         </div>
         <img
@@ -148,7 +227,7 @@
       <div id="difficulty-select" style="display: none">
         <div class="background-image"></div>
         <div class="difficulty-content">
-          <div class="title">“흑 VS 백”</div>
+          <div class="title">"흑 VS 백"</div>
           <div class="subtitle">원하는 난이도를 고르세요</div>
           <div class="difficulty-row">
             <img

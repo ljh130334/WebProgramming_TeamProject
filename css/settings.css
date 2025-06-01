@@ -1,0 +1,286 @@
+/* 설정 패널 애니메이션 */
+#settings-panel {
+  animation: slideInUp 0.3s ease-out both;
+}
+
+@keyframes slideInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 설정 컨테이너 */
+.settings-container {
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(15px);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-radius: 20px;
+  padding: 25px;
+  box-shadow: 0 25px 45px rgba(0, 0, 0, 0.3);
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+/* 설정 헤더 */
+.settings-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.settings-title {
+  color: #fff;
+  font-size: 24px;
+  font-weight: 700;
+  text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7);
+  margin: 0;
+}
+
+.settings-close-btn {
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  color: #fff;
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 18px;
+  font-weight: bold;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.settings-close-btn:hover {
+  background: rgba(255, 107, 53, 0.8);
+  transform: rotate(90deg);
+}
+
+/* 설정 섹션 */
+.settings-section {
+  margin-bottom: 25px;
+}
+
+.settings-label {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  color: #fff;
+  font-weight: 600;
+}
+
+.settings-icon {
+  font-size: 20px;
+  margin-right: 10px;
+}
+
+.settings-text {
+  flex: 1;
+  font-size: 16px;
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7);
+}
+
+.volume-percentage {
+  background: rgba(255, 107, 53, 0.8);
+  color: #fff;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: bold;
+  min-width: 35px;
+  text-align: center;
+}
+
+/* 볼륨 컨트롤 */
+.custom-volume-control {
+  display: flex;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  padding: 12px 20px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  margin-bottom: 10px;
+}
+
+.custom-volume-control .volume-icon {
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+  opacity: 0.85;
+  filter: brightness(0) invert(1);
+}
+
+.custom-volume-control .volume-slider {
+  flex: 1;
+  margin: 0 16px;
+  height: 6px;
+  background: transparent;
+  border-radius: 3px;
+  appearance: none;
+  outline: none;
+  position: relative;
+}
+
+/* 슬라이더 스타일 */
+.custom-volume-control .volume-slider::-webkit-slider-thumb {
+  appearance: none;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #ff6b35, #f7931e);
+  border: 2px solid #fff;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+  margin-top: -8px;
+  transition: all 0.2s ease;
+}
+
+.custom-volume-control .volume-slider::-webkit-slider-thumb:hover {
+  transform: scale(1.1);
+  box-shadow: 0 4px 12px rgba(255, 107, 53, 0.4);
+}
+
+.custom-volume-control .volume-slider::-webkit-slider-runnable-track {
+  height: 6px;
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 3px;
+}
+
+/* 토글 스위치 */
+.settings-toggles {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.settings-toggle {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 12px 15px;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+}
+
+.settings-toggle:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.settings-toggle input {
+  display: none;
+}
+
+.toggle-slider {
+  width: 50px;
+  height: 25px;
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 25px;
+  position: relative;
+  transition: all 0.3s ease;
+  margin-right: 15px;
+}
+
+.toggle-slider::after {
+  content: "";
+  width: 21px;
+  height: 21px;
+  background: #fff;
+  border-radius: 50%;
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+.settings-toggle input:checked + .toggle-slider {
+  background: linear-gradient(135deg, #ff6b35, #f7931e);
+}
+
+.settings-toggle input:checked + .toggle-slider::after {
+  transform: translateX(25px);
+}
+
+.toggle-text {
+  color: #fff;
+  font-weight: 500;
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7);
+}
+
+/* 설정 푸터 */
+.settings-footer {
+  margin-top: 25px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+  text-align: center;
+}
+
+.settings-reset-btn {
+  background: linear-gradient(135deg, #666, #888);
+  border: none;
+  color: #fff;
+  padding: 12px 24px;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  font-size: 14px;
+}
+
+.settings-reset-btn:hover {
+  background: linear-gradient(135deg, #ff6b35, #f7931e);
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(255, 107, 53, 0.4);
+}
+
+/* 설정 알림 스타일 */
+.settings-notification {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: linear-gradient(135deg, #ff6b35, #f7931e);
+  color: #fff;
+  padding: 15px 20px;
+  border-radius: 12px;
+  font-weight: bold;
+  z-index: 10000;
+  box-shadow: 0 5px 15px rgba(255, 107, 53, 0.4);
+  transform: translateX(100%);
+  transition: all 0.3s ease;
+  font-family: "Pretendard Variable", Pretendard, sans-serif;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+/* 애니메이션 비활성화 클래스 */
+.no-animations * {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+}
+
+.no-animations .circle-bg {
+  animation: none !important;
+}
+
+.no-animations .main-title,
+.no-animations .main-subtitle,
+.no-animations .main-buttons {
+  animation: none !important;
+}
+
+.no-animations .typing-cursor {
+  animation: none !important;
+  opacity: 1;
+}
