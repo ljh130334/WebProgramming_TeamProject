@@ -1,6 +1,6 @@
-// 메인 화면 애니메이션 효과들 - 설정 시스템 연동
+// 메인 화면 전용 애니메이션 효과들
 $(document).ready(function () {
-  // 페이지 로드 시 애니메이션 시작
+  // 페이지 로드 시 메인 화면 애니메이션 시작
   initMainAnimations();
 });
 
@@ -11,15 +11,16 @@ function initMainAnimations() {
   // 떨어지는 요리 재료 생성
   createFallingIngredients();
 
-  // 강화된 불꽃 파티클 생성
-  createEnhancedFireParticles();
+  // 셰프 모자 생성
+  createChefHats();
 
-  // 버튼 호버 효과 추가
-  addButtonEffects();
-
-  // 마우스 효과 추가
-  addMouseEffects();
+  // 메인 화면 전용 버튼 효과 추가
+  addMainButtonEffects();
 }
+
+// ===========================================
+// 메인 화면 전용 효과들
+// ===========================================
 
 // 1. 타이핑 효과 - 한글자씩 + 삭제 + 다른 제목
 function startTypingEffect() {
@@ -80,166 +81,7 @@ function startTypingEffect() {
   setTimeout(typeTitle, 1000);
 }
 
-// 2. 강화된 불꽃 파티클 생성 (설정 연동)
-function createEnhancedFireParticles() {
-  const particleTypes = ["small", "medium", "large"];
-
-  // 지속적인 작은 불꽃들
-  setInterval(() => {
-    if ($("#main").is(":visible") && !window.particlesDisabled) {
-      for (let i = 0; i < 5; i++) {
-        const type =
-          particleTypes[Math.floor(Math.random() * particleTypes.length)];
-        const $particle = $(`<div class="fire-particle ${type}"></div>`);
-
-        $particle.css({
-          left: Math.random() * 100 + "%",
-          bottom: "0px",
-          animationDelay: Math.random() * 1 + "s",
-          animationDuration: Math.random() * 2 + 2 + "s",
-        });
-
-        $("#main").append($particle);
-
-        setTimeout(() => {
-          $particle.remove();
-        }, 4000);
-      }
-    }
-  }, 300);
-
-  // 큰 불꽃 폭발 효과
-  setInterval(() => {
-    if ($("#main").is(":visible") && !window.particlesDisabled) {
-      const $explosion = $('<div class="fire-explosion"></div>');
-      $explosion.css({
-        left: Math.random() * 100 + "%",
-        bottom: "20px",
-      });
-
-      $("#main").append($explosion);
-
-      // 폭발과 함께 작은 파티클들 생성
-      for (let i = 0; i < 8; i++) {
-        setTimeout(() => {
-          const $miniParticle = $('<div class="fire-particle small"></div>');
-          $miniParticle.css({
-            left: $explosion.css("left"),
-            bottom: "20px",
-            animationDuration: "1s",
-          });
-          $("#main").append($miniParticle);
-
-          setTimeout(() => {
-            $miniParticle.remove();
-          }, 1000);
-        }, i * 50);
-      }
-
-      setTimeout(() => {
-        $explosion.remove();
-      }, 1500);
-    }
-  }, 3000);
-}
-
-// 3. 마우스 효과 추가 (설정 연동)
-function addMouseEffects() {
-  let mouseX = 0;
-  let mouseY = 0;
-
-  // 마우스 위치 추적
-  $("#main").mousemove(function (e) {
-    mouseX = e.pageX;
-    mouseY = e.pageY;
-
-    // 파티클이 활성화된 경우에만 효과 생성
-    if (!window.particlesDisabled) {
-      // 마우스 트레일 생성
-      createMouseTrail(mouseX, mouseY);
-
-      // 마우스 파티클 생성 (확률적으로)
-      if (Math.random() < 0.3) {
-        createMouseParticle(mouseX, mouseY);
-      }
-    }
-  });
-
-  // 마우스 클릭 시 특별한 효과
-  $("#main").click(function (e) {
-    if (!window.particlesDisabled) {
-      createMouseClickEffect(e.pageX, e.pageY);
-    }
-  });
-}
-
-function createMouseTrail(x, y) {
-  const $trail = $('<div class="mouse-trail"></div>');
-  $trail.css({
-    left: x - 10 + "px",
-    top: y - 10 + "px",
-  });
-
-  $("body").append($trail);
-
-  setTimeout(() => {
-    $trail.remove();
-  }, 1000);
-}
-
-function createMouseParticle(x, y) {
-  const $particle = $('<div class="mouse-particle"></div>');
-  $particle.css({
-    left: x + (Math.random() - 0.5) * 20 + "px",
-    top: y + (Math.random() - 0.5) * 20 + "px",
-  });
-
-  $("body").append($particle);
-
-  setTimeout(() => {
-    $particle.remove();
-  }, 2000);
-}
-
-function createMouseClickEffect(x, y) {
-  // 클릭 시 큰 불꽃 효과
-  const $clickFire = $('<div class="fire-explosion"></div>');
-  $clickFire.css({
-    left: x - 15 + "px",
-    top: y - 15 + "px",
-  });
-
-  $("body").append($clickFire);
-
-  // 주변에 작은 파티클들 생성
-  for (let i = 0; i < 12; i++) {
-    const angle = (i / 12) * Math.PI * 2;
-    const distance = 30 + Math.random() * 20;
-    const particleX = x + Math.cos(angle) * distance;
-    const particleY = y + Math.sin(angle) * distance;
-
-    const $particle = $('<div class="mouse-particle"></div>');
-    $particle.css({
-      left: particleX + "px",
-      top: particleY + "px",
-      background: ["#ff4500", "#ff6b35", "#ffa500", "#ffff00"][
-        Math.floor(Math.random() * 4)
-      ],
-    });
-
-    $("body").append($particle);
-
-    setTimeout(() => {
-      $particle.remove();
-    }, 2000);
-  }
-
-  setTimeout(() => {
-    $clickFire.remove();
-  }, 1500);
-}
-
-// 떨어지는 요리 재료 생성 (설정 연동)
+// 2. 떨어지는 요리 재료 생성 (메인 화면 전용)
 function createFallingIngredients() {
   const ingredients = [
     "🥕",
@@ -275,8 +117,33 @@ function createFallingIngredients() {
   }, 1500);
 }
 
-// 버튼 효과 추가
-function addButtonEffects() {
+// 3. 셰프 모자 생성 (메인 화면 전용)
+function createChefHats() {
+  const chefEmojis = ["👨‍🍳", "👩‍🍳", "🧑‍🍳"];
+
+  setInterval(() => {
+    if ($("#main").is(":visible") && !window.particlesDisabled) {
+      const emoji = chefEmojis[Math.floor(Math.random() * chefEmojis.length)];
+      const $chefHat = $('<div class="chef-hat"></div>');
+      $chefHat.text(emoji);
+      $chefHat.css({
+        left: Math.random() * 100 + "%",
+        top: Math.random() * 100 + "%",
+        animationDelay: Math.random() * 2 + "s",
+      });
+
+      $("#main").append($chefHat);
+
+      setTimeout(() => {
+        $chefHat.remove();
+      }, 8000);
+    }
+  }, 5000);
+}
+
+// 4. 메인 화면 전용 버튼 효과
+function addMainButtonEffects() {
+  // 게임시작 버튼 호버 효과
   $("#start-game-btn").hover(
     function () {
       $(this).html("🔥 게임시작 🔥");
@@ -286,6 +153,7 @@ function addButtonEffects() {
     }
   );
 
+  // 옵션 버튼 호버 효과
   $("#options-btn").hover(
     function () {
       $(this).html("⚙️ 옵션 ⚙️");
@@ -294,44 +162,224 @@ function addButtonEffects() {
       $(this).html("옵션");
     }
   );
-
-  $(".main-btn").click(function (e) {
-    createClickParticles(e);
-  });
 }
 
-// 클릭 시 파티클 생성 (설정 연동)
-function createClickParticles(event) {
-  if (window.particlesDisabled) return; // 파티클이 비활성화된 경우 실행하지 않음
+// ===========================================
+// 메인 화면에서만 사용하는 강화된 파티클
+// ===========================================
 
-  const colors = ["#ff6b35", "#f7931e", "#ffaa4d", "#ff8c42"];
+// 메인 화면 전용 강화된 불꽃 파티클
+function createMainEnhancedFireParticles() {
+  const particleTypes = ["small", "medium", "large"];
 
-  for (let i = 0; i < 8; i++) {
-    const $particle = $("<div></div>");
-    $particle.css({
-      position: "absolute",
-      width: "6px",
-      height: "6px",
-      backgroundColor: colors[Math.floor(Math.random() * colors.length)],
-      borderRadius: "50%",
-      left: event.pageX + "px",
-      top: event.pageY + "px",
-      pointerEvents: "none",
-      zIndex: 1000,
-    });
+  // 메인 화면에서만 더 많은 파티클 생성
+  setInterval(() => {
+    if ($("#main").is(":visible") && !window.particlesDisabled) {
+      for (let i = 0; i < 3; i++) {
+        // 메인 화면에서는 추가 파티클
+        const type =
+          particleTypes[Math.floor(Math.random() * particleTypes.length)];
+        const $particle = $(
+          `<div class="fire-particle ${type} main-exclusive"></div>`
+        );
 
-    $("body").append($particle);
+        $particle.css({
+          left: Math.random() * 100 + "%",
+          bottom: "0px",
+          animationDelay: Math.random() * 1 + "s",
+          animationDuration: Math.random() * 2 + 2 + "s",
+        });
 
-    $particle.animate(
-      {
-        left: event.pageX + (Math.random() - 0.5) * 100 + "px",
-        top: event.pageY + (Math.random() - 0.5) * 100 + "px",
-        opacity: 0,
-      },
-      1000,
-      function () {
-        $(this).remove();
+        $("#main").append($particle);
+
+        setTimeout(() => {
+          $particle.remove();
+        }, 4000);
       }
-    );
+    }
+  }, 200); // 더 자주 생성
+}
+
+// 메인 화면 진입 시 특별한 시작 효과
+function triggerMainScreenEntrance() {
+  if (!window.particlesDisabled) {
+    // 화면 중앙에서 환영 파티클 폭발
+    const centerX = window.innerWidth / 2;
+    const centerY = window.innerHeight / 2;
+
+    for (let i = 0; i < 20; i++) {
+      const angle = (i / 20) * Math.PI * 2;
+      const distance = 100 + Math.random() * 100;
+      const particleX = centerX + Math.cos(angle) * distance;
+      const particleY = centerY + Math.sin(angle) * distance;
+
+      const $particle = $('<div class="welcome-particle"></div>');
+      $particle.css({
+        position: "fixed",
+        left: centerX + "px",
+        top: centerY + "px",
+        width: "10px",
+        height: "10px",
+        background: `linear-gradient(45deg, ${
+          ["#ff6b35", "#f7931e", "#ffaa4d"][Math.floor(Math.random() * 3)]
+        }, transparent)`,
+        borderRadius: "50%",
+        pointerEvents: "none",
+        zIndex: 9999,
+        boxShadow: "0 0 15px currentColor",
+      });
+
+      $("body").append($particle);
+
+      $particle.animate(
+        {
+          left: particleX + "px",
+          top: particleY + "px",
+          opacity: 0,
+          width: "4px",
+          height: "4px",
+        },
+        1200,
+        function () {
+          $(this).remove();
+        }
+      );
+    }
   }
 }
+
+// ===========================================
+// 화면 전환 이벤트 처리
+// ===========================================
+
+// 메인 화면 표시 시 효과 시작
+$(document).on("screen-changed", function (e, screenId) {
+  if (screenId === "main") {
+    // 메인 화면 진입 효과
+    setTimeout(triggerMainScreenEntrance, 300);
+
+    // 메인 화면 전용 강화 파티클 시작
+    createMainEnhancedFireParticles();
+  } else {
+    // 메인 화면이 아닐 때 메인 전용 파티클 정리
+    $(".main-exclusive").remove();
+  }
+});
+
+// ===========================================
+// 메인 화면 전용 CSS 스타일 추가
+// ===========================================
+
+$("<style>")
+  .text(
+    `
+  /* 떨어지는 요리 재료 애니메이션 */
+  .falling-ingredients {
+    position: absolute;
+    top: -50px;
+    font-size: 60px;
+    animation: fall linear infinite;
+    z-index: 1;
+    opacity: 0.7;
+    pointer-events: none;
+  }
+
+  @keyframes fall {
+    0% {
+      transform: translateY(-50px) rotate(0deg);
+      opacity: 0;
+    }
+    10% {
+      opacity: 0.7;
+    }
+    90% {
+      opacity: 0.7;
+    }
+    100% {
+      transform: translateY(100vh) rotate(360deg);
+      opacity: 0;
+    }
+  }
+
+  /* 셰프 모자 떠다니는 효과 */
+  .chef-hat {
+    position: absolute;
+    font-size: 50px;
+    animation: floatHat 8s ease-in-out infinite;
+    z-index: 1;
+    opacity: 0.6;
+    pointer-events: none;
+  }
+
+  @keyframes floatHat {
+    0%, 100% {
+      transform: translate(0, 0) rotate(0deg);
+    }
+    25% {
+      transform: translate(20px, -30px) rotate(5deg);
+    }
+    50% {
+      transform: translate(-10px, -20px) rotate(-3deg);
+    }
+    75% {
+      transform: translate(15px, -35px) rotate(7deg);
+    }
+  }
+
+  /* 타이핑 커서 */
+  .typing-cursor {
+    display: inline-block;
+    background-color: #fff;
+    margin-left: 2px;
+    width: 2px;
+    animation: blink 1s infinite;
+  }
+
+  @keyframes blink {
+    0%, 50% {
+      opacity: 1;
+    }
+    51%, 100% {
+      opacity: 0;
+    }
+  }
+
+  /* 메인 화면 전용 파티클 강화 */
+  .main-exclusive {
+    box-shadow: 0 0 20px currentColor !important;
+  }
+
+  /* 환영 파티클 */
+  .welcome-particle {
+    animation: welcomeParticle 1.2s ease-out forwards;
+  }
+
+  @keyframes welcomeParticle {
+    0% {
+      opacity: 1;
+      transform: scale(0.5);
+    }
+    50% {
+      opacity: 1;
+      transform: scale(1.2);
+    }
+    100% {
+      opacity: 0;
+      transform: scale(0.3);
+    }
+  }
+
+  /* 애니메이션 비활성화 시 메인 화면 요소들 */
+  .no-animations .falling-ingredients,
+  .no-animations .chef-hat {
+    animation: none !important;
+    opacity: 0 !important;
+  }
+
+  .no-animations .typing-cursor {
+    animation: none !important;
+    opacity: 1;
+  }
+`
+  )
+  .appendTo("head");

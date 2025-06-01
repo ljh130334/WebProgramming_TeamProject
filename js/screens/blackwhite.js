@@ -1,3 +1,4 @@
+// 흑백 선택화면 전용 JavaScript
 $(document).ready(function () {
   initBlackWhiteScreen();
 });
@@ -18,7 +19,7 @@ function initBlackWhiteScreen() {
     handleSelection(selectedSide);
   });
 
-  // 호버 효과
+  // 호버 효과 (공통 파티클 사용)
   $(".blackwhite-half").on("mouseenter", function () {
     if (!window.particlesDisabled) {
       createHoverEffect($(this));
@@ -34,12 +35,14 @@ function initBlackWhiteScreen() {
   });
 }
 
-// 흑백 선택화면 애니메이션 시작
+// ===========================================
+// 흑백 화면 전용 애니메이션
+// ===========================================
+
 function startBlackWhiteAnimations() {
-  // 메인 화면과 동일한 파티클 효과 적용
+  // 흑백 화면 전용 파티클 효과
   if (!window.particlesDisabled) {
     createBlackWhiteParticles();
-    createFloatingElements();
   }
 
   // 음양 이미지 회전 효과
@@ -54,14 +57,13 @@ function handleSelection(selectedSide) {
   // 선택 효과 표시
   $selectedHalf.addClass("selected");
 
-  // 선택 파티클 효과
+  // 선택 파티클 효과 (공통 파티클 재사용)
   if (!window.particlesDisabled) {
     createSelectionParticles($selectedHalf);
   }
 
   // 효과음 재생 (설정에서 음량 가져오기)
   if (typeof getSfxVolume === "function") {
-    // 여기에 선택 효과음 재생 코드 추가
     console.log("선택 효과음 재생 - 볼륨:", getSfxVolume());
   }
 
@@ -72,15 +74,17 @@ function handleSelection(selectedSide) {
   setTimeout(() => {
     $("#black-white").hide();
     $("#tool-select").show();
-
-    // 화면 변경 이벤트 발생
     $(document).trigger("screen-changed", ["tool-select"]);
   }, 1500);
 
   console.log("선택됨:", selectedSide);
 }
 
-// 호버 효과 파티클
+// ===========================================
+// 흑백 화면 전용 효과들
+// ===========================================
+
+// 호버 효과 파티클 (공통 selection-particle 사용)
 function createHoverEffect($element) {
   const rect = $element[0].getBoundingClientRect();
   const centerX = rect.left + rect.width / 2;
@@ -189,9 +193,7 @@ function createYinYangEffect(x, y) {
 
   // 음양 이미지 회전 효과
   $(".yinyang-foreground")
-    .css({
-      animation: "none",
-    })
+    .css({ animation: "none" })
     .animate(
       {
         deg: 360,
@@ -213,19 +215,21 @@ function createYinYangEffect(x, y) {
     );
 }
 
-// 흑백 화면용 파티클 효과
+// 흑백 화면용 파티클 효과 (테마에 맞게 수정)
 function createBlackWhiteParticles() {
-  // 흑백 테마의 파티클들
   const blackWhiteParticles = ["⚫", "⚪"];
 
   setInterval(() => {
     if ($("#black-white").is(":visible") && !window.particlesDisabled) {
-      for (let i = 0; i < 3; i++) {
+      for (let i = 0; i < 2; i++) {
+        // 공통 파티클과 겹치지 않게 수량 조절
         const particle =
           blackWhiteParticles[
             Math.floor(Math.random() * blackWhiteParticles.length)
           ];
-        const $particle = $('<div class="floating-particle"></div>');
+        const $particle = $(
+          '<div class="floating-particle blackwhite-exclusive"></div>'
+        );
 
         $particle
           .css({
@@ -248,13 +252,17 @@ function createBlackWhiteParticles() {
         }, 6000);
       }
     }
-  }, 2000);
+  }, 3000); // 간격 늘림
 }
 
-// CSS 애니메이션 추가 (JavaScript로 동적 생성)
+// ===========================================
+// 흑백 화면 전용 CSS 추가
+// ===========================================
+
 $("<style>")
   .text(
     `
+    /* 흑백 화면 떠오르는 파티클 */
     @keyframes floatUp {
       0% {
         transform: translateY(0px) rotate(0deg);
@@ -272,25 +280,23 @@ $("<style>")
       }
     }
   
-    @keyframes chefFloat {
-      0%, 100% {
-        transform: translate(0, 0) rotate(0deg);
-      }
-      25% {
-        transform: translate(20px, -30px) rotate(5deg);
-      }
-      50% {
-        transform: translate(-15px, -20px) rotate(-3deg);
-      }
-      75% {
-        transform: translate(25px, -35px) rotate(7deg);
-      }
+    .floating-particle {
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
     }
   
-    .floating-particle,
-    .floating-chef-element {
-      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    /* 흑백 화면에서 나가면 전용 파티클 제거 */
+    .blackwhite-exclusive {
+      transition: opacity 0.3s ease;
     }
   `
   )
   .appendTo("head");
+
+// 화면 전환 시 흑백 전용 파티클 정리
+$(document).on("screen-changed", function (e, screenId) {
+  if (screenId !== "black-white") {
+    $(".blackwhite-exclusive").fadeOut(300, function () {
+      $(this).remove();
+    });
+  }
+});
