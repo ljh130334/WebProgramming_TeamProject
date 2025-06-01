@@ -14,9 +14,6 @@ function initMainAnimations() {
   // 강화된 불꽃 파티클 생성
   createEnhancedFireParticles();
 
-  // 셰프 모자 생성
-  createChefHats();
-
   // 버튼 호버 효과 추가
   addButtonEffects();
 
