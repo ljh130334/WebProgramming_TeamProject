@@ -1,4 +1,5 @@
 /* 시작화면 */
+/* 마우스 커서 변경 */
 #main {
   position: relative;
   display: block;
@@ -6,6 +7,54 @@
     center/cover no-repeat;
   text-align: center;
   overflow: hidden;
+  cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32"><text y="24" font-size="24">🔥</text></svg>'),
+    auto;
+}
+
+/* 마우스 트레일 효과 */
+.mouse-trail {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  background: radial-gradient(circle, rgba(255, 107, 53, 0.8), transparent);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 0;
+  animation: trail-fade 1s ease-out forwards;
+}
+
+@keyframes trail-fade {
+  0% {
+    opacity: 0.8;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(2);
+  }
+}
+
+/* 마우스 주변 파티클 */
+.mouse-particle {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background: #ff6b35;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 0;
+  animation: mouse-particle-float 2s ease-out forwards;
+}
+
+@keyframes mouse-particle-float {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.2) translateY(-30px);
+  }
 }
 
 #main::before {
@@ -55,24 +104,84 @@
 /* 불꽃 파티클 */
 .fire-particle {
   position: absolute;
-  width: 4px;
-  height: 4px;
-  background: radial-gradient(circle, #ff6b35, #f7931e);
   border-radius: 50%;
-  animation: firefly 3s ease-in-out infinite;
+  animation: firefly ease-in-out infinite;
   z-index: 1;
   pointer-events: none;
 }
 
+.fire-particle.small {
+  width: 8px;
+  height: 8px;
+  background: radial-gradient(circle, #ff4500, #ff6b35);
+  box-shadow: 0 0 10px #ff4500;
+}
+
+.fire-particle.medium {
+  width: 12px;
+  height: 12px;
+  background: radial-gradient(circle, #ff6b35, #ffa500);
+  box-shadow: 0 0 15px #ff6b35;
+}
+
+.fire-particle.large {
+  width: 16px;
+  height: 16px;
+  background: radial-gradient(circle, #ffa500, #ffff00);
+  box-shadow: 0 0 20px #ffa500;
+}
+
 @keyframes firefly {
-  0%,
-  100% {
+  0% {
     opacity: 0;
-    transform: translateY(20px) scale(0.5);
+    transform: translateY(0px) scale(0.3);
+  }
+  10% {
+    opacity: 1;
+    transform: translateY(-20px) scale(0.8);
   }
   50% {
     opacity: 1;
-    transform: translateY(-20px) scale(1);
+    transform: translateY(-80px) scale(1.2);
+  }
+  80% {
+    opacity: 0.8;
+    transform: translateY(-120px) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-150px) scale(0.5);
+  }
+}
+
+/* 큰 불꽃 폭발 효과 */
+.fire-explosion {
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  background: radial-gradient(circle, #ffff00, #ff4500);
+  border-radius: 50%;
+  animation: explode 1.5s ease-out;
+  z-index: 1;
+  pointer-events: none;
+  box-shadow: 0 0 30px #ff4500;
+}
+
+@keyframes explode {
+  0% {
+    opacity: 1;
+    transform: scale(0.1);
+    box-shadow: 0 0 30px #ff4500;
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.5);
+    box-shadow: 0 0 50px #ff4500;
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.3);
+    box-shadow: 0 0 10px #ff4500;
   }
 }
 
@@ -124,19 +233,28 @@
   margin-top: 80px;
   color: #fff;
   text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7);
-  overflow: hidden;
-  white-space: nowrap;
-  animation: typing 3s steps(8) 1s both;
+  min-height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-@keyframes typing {
-  0% {
-    width: 0;
-    margin-left: 50%;
+.typing-cursor {
+  display: inline-block;
+  background-color: #fff;
+  margin-left: 2px;
+  width: 2px;
+  animation: blink 1s infinite;
+}
+
+@keyframes blink {
+  0%,
+  50% {
+    opacity: 1;
   }
+  51%,
   100% {
-    width: 100%;
-    margin-left: 0;
+    opacity: 0;
   }
 }
 
