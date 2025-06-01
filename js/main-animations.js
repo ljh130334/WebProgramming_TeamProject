@@ -278,23 +278,6 @@ function createFallingIngredients() {
   }, 1500);
 }
 
-// 셰프 모자 생성 (설정 연동)
-function createChefHats() {
-  const hats = ["👨‍🍳", "👩‍🍳", "🧑‍🍳"];
-
-  for (let i = 0; i < 2; i++) {
-    const $hat = $('<div class="chef-hat"></div>');
-    $hat.text(hats[i % hats.length]);
-    $hat.css({
-      top: Math.random() * 30 + 10 + "%",
-      left: Math.random() * 80 + 10 + "%",
-      animationDelay: Math.random() * 4 + "s",
-    });
-
-    $("#main").append($hat);
-  }
-}
-
 // 버튼 효과 추가
 function addButtonEffects() {
   $("#start-game-btn").hover(

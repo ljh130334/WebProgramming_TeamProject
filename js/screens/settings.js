@@ -72,6 +72,7 @@ function initSettingsSystem() {
     if (!audioSettings.particlesEnabled) {
       // 파티클 효과 비활성화 - 기존 파티클 제거
       $(".fire-particle, .falling-ingredients, .chef-hat").remove();
+      showNotification("파티클 효과가 비활성화되었습니다.");
       // 새로운 파티클 생성 중단
       window.particlesDisabled = true;
     } else {
@@ -168,6 +169,8 @@ function saveSettings() {
 }
 
 function resetSettings() {
+  localStorage.removeItem("audioSettings");
+
   audioSettings = {
     bgmVolume: 50,
     sfxVolume: 70,
@@ -175,12 +178,26 @@ function resetSettings() {
     animationsEnabled: true,
   };
 
-  loadSettings();
-  saveSettings();
+  $("#main-volume-range").val(audioSettings.bgmVolume);
+  $("#volume-display").text(audioSettings.bgmVolume + "%");
+  $("#sfx-volume-range").val(audioSettings.sfxVolume);
+  $("#sfx-display").text(audioSettings.sfxVolume + "%");
+  $("#particles-toggle").prop("checked", audioSettings.particlesEnabled);
+  $("#animations-toggle").prop("checked", audioSettings.animationsEnabled);
 
-  // 파티클과 애니메이션 상태 초기화
+  const $mainBgm = $("#main-bgm");
+  if ($mainBgm.length) {
+    $mainBgm[0].volume = audioSettings.bgmVolume / 100;
+  }
+
   $("body").removeClass("no-animations");
   window.particlesDisabled = false;
+
+  $(".fire-particle, .falling-ingredients, .chef-hat").remove();
+
+  saveSettings();
+
+  console.log("설정이 완전히 초기화되었습니다:", audioSettings);
 }
 
 // 볼륨 변경 시 시각적 효과

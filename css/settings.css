@@ -1,6 +1,10 @@
 /* 설정 패널 애니메이션 */
 #settings-panel {
   animation: slideInUp 0.3s ease-out both;
+  margin-top: 20px;
+  position: fixed;
+  width: 100%;
+  top: -30%;
 }
 
 @keyframes slideInUp {
@@ -16,7 +20,7 @@
 
 /* 설정 컨테이너 */
 .settings-container {
-  background: rgba(255, 255, 255, 0.15);
+  background: black;
   backdrop-filter: blur(15px);
   border: 2px solid rgba(255, 255, 255, 0.2);
   border-radius: 20px;
@@ -85,7 +89,6 @@
 }
 
 .settings-text {
-  flex: 1;
   font-size: 16px;
   text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7);
 }
