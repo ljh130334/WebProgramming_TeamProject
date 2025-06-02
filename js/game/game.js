@@ -103,13 +103,13 @@ function startGame() {
 
     // 타이머 시작
     game.gameTimer = setInterval(updateTimer, 1000);
-    game.blockTimer = setInterval(moveBlocksDown, 1000000);
+    game.blockTimer = setInterval(moveBlocksDown, 5000);
   }, 1000);
 }
 
 function resetGame() {
   // 시간 설정
-  const timeSettings = { Easy: 9000, Normal: 75, Hard: 60 };
+  const timeSettings = { Easy: 90, Normal: 75, Hard: 60 };
   game.timeLeft = timeSettings[game.selectedDifficulty];
 
   // 재료 설정
