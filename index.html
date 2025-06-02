@@ -1,132 +1,454 @@
-<!-- 메인 HTML 파일 (시작화면) -->
 <!DOCTYPE html>
 <html lang="ko">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>메인 화면</title>
-        <link rel="stylesheet" href="css/common.css">
-        <link rel="stylesheet" href="css/main.css">
-        <link rel="stylesheet" href="css/blackwhite.css">
-        <link rel="stylesheet" href="css/success.css">
-        <link rel="stylesheet" href="css/failure.css">
-        <link rel="stylesheet" href="css/tools.css">
-        <link rel="stylesheet" href="css/difficulty.css">
-        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-        <script src="js/main.js"></script>
-        <script src="js/game/game.js"></script>
-        <script src="js/screens/tools.js"></script>
-        <script src="js/screens/difficulty.js"></script>
-
-
-    </head>
-    <body>
-        <div id="content">
-            <!-- 시작 화면 -->
-            <div id="main" style="display: block;">
-                <div class="center-wrapper">
-                    <div class="circle-bg">
-                        <div class="main-title">“흑 VS 백”</div>
-                        <div class="main-subtitle">요리사</div>
-                        <div class="main-buttons">
-                            <button class="main-btn" id="start-game-btn">게임시작</button>
-                            <button class="main-btn" id="options-btn">옵션</button>
-                        </div>
-                        <div id="sound-control-bar" style="display: none; margin-top: 20px;">
-                            <div class="custom-volume-control">
-                              <img src="assets/images/ui/volume_min.svg" alt="Volume Min" class="volume-icon volume-min">
-                              <input type="range" min="0" max="100" value="100" class="volume-slider" id="main-volume-range">
-                              <img src="assets/images/ui/volume_max.svg" alt="Volume Max" class="volume-icon volume-max">
-                            </div>
-                            <audio id="main-bgm" src="assets/sounds/bgm/bgm.mp3" loop preload="auto"></audio>
-                        </div>
-                    </div>
-                </div>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>메인 화면</title>
+    <link rel="stylesheet" href="css/common.css" />
+    <link rel="stylesheet" href="css/main.css" />
+    <link rel="stylesheet" href="css/settings.css" />
+    <link rel="stylesheet" href="css/blackwhite.css" />
+    <link rel="stylesheet" href="css/game.css" />
+    <link rel="stylesheet" href="css/success.css" />
+    <link rel="stylesheet" href="css/failure.css" />
+    <link rel="stylesheet" href="css/tools.css" />
+    <link rel="stylesheet" href="css/difficulty.css" />
+    <link rel="stylesheet" href="css/effects.css" />
+    <link
+      href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css"
+      rel="stylesheet"
+    />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="js/utils/common-effects.js"></script>
+    <script src="js/screens/settings.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/main-animations.js"></script>
+    <script src="js/screens/blackwhite.js"></script>
+    <script src="js/game/game.js"></script>
+    <script src="js/screens/tools.js"></script>
+    <script src="js/screens/difficulty.js"></script>
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
+  </head>
+  <body>
+    <div id="content">
+      <!-- 시작 화면 -->
+      <div id="main" style="display: block">
+        <div class="center-wrapper">
+          <div class="circle-bg">
+            <div class="main-title"></div>
+            <div class="main-subtitle">미식왕을 향한 도전</div>
+            <div class="main-buttons">
+              <button class="main-btn" id="start-game-btn">게임시작</button>
+              <button class="main-btn" id="options-btn">옵션</button>
             </div>
+            <div id="settings-panel" style="display: none; margin-top: 20px">
+              <div class="settings-container">
+                <!-- 설정 헤더 -->
+                <div class="settings-header">
+                  <h3 class="settings-title">설정</h3>
+                  <button class="settings-close-btn" id="settings-close">
+                    ✕
+                  </button>
+                </div>
 
-            <!-- 흑백 선택화면 -->
-            <div id="black-white" style="display: none;">
-                <img src="assets/images/backgrounds/yinyang.png" alt="YinYang" class="yinyang-foreground" />
-                <div class="blackwhite-bg">
-                  <div class="blackwhite-center-group">
-                    <div class="blackwhite-center">
-                      <div class="blackwhite-title">“흑 <b>VS</b> 백”</div>
-                      <div class="blackwhite-subtitle">흑과 백 중 하나를 선택하세요</div>
-                    </div>
-                    <div class="blackwhite-centerbox">
-                      <div class="blackwhite-half blackwhite-left">
-                        <img src="assets/images/ui/chinese_black.png" alt="흑" class="blackwhite-char" />
-                      </div>
-                      <div class="blackwhite-half blackwhite-right">
-                        <img src="assets/images/ui/chinese_white.png" alt="백" class="blackwhite-char" />
-                      </div>
-                    </div>
-                    <div class="blackwhite-descbox">
-                      <div class="blackwhite-desc left">
-                        흑을 고르면, 미슐랭 스타를 획득시<br>기름의 크기가 커집니다.
-                      </div>
-                      <div class="blackwhite-desc right">
-                        백을 고르면, 미슐랭 스타를 획득시<br> 기름의 갯수가 많아집니다.
-                      </div>
-                    </div>
+                <!-- 배경음악 설정 -->
+                <div class="settings-section">
+                  <div class="settings-label">
+                    <span class="settings-text">배경음악</span>
+                    <span class="volume-percentage" id="volume-display"
+                      >50%</span
+                    >
+                  </div>
+                  <div class="custom-volume-control">
+                    <img
+                      src="assets/images/ui/volume_min.svg"
+                      alt="Volume Min"
+                      class="volume-icon volume-min"
+                    />
+                    <input
+                      type="range"
+                      min="0"
+                      max="100"
+                      value="50"
+                      class="volume-slider"
+                      id="main-volume-range"
+                    />
+                    <img
+                      src="assets/images/ui/volume_max.svg"
+                      alt="Volume Max"
+                      class="volume-icon volume-max"
+                    />
                   </div>
                 </div>
-            </div>
 
-            <!-- 조리도구 선택 화면 -->
-            <div id="tool-select" style="display: none;">
-                <div class="background-image"></div>
-                <div class="center-text">
-                  <div class="title">“흑 VS 백”</div>
-                  <div class="subtitle">원하는 조리도구를 고르세요</div>
-                </div>
-                <img class="tool tool-top-left" src="assets/images/tools/wok.png" alt="Black Wok" data-tool="Wok">
-                <img class="tool tool-top-right disabled" src="assets/images/tools/golden_pan_disabled.png" alt="Gold Pan (disabled)" data-tool="Gold Pan">
-                <img class="tool tool-bottom-left disabled" src="assets/images/tools/golden_turner_disabled.png" alt="Gold Turner (disabled)" data-tool="Gold Turner">
-                <img class="tool tool-bottom-right" src="assets/images/tools/knife.png" alt="Knife" data-tool="Knife">
-            </div>
-
-            <!-- 난이도 선택 화면 -->
-            <div id="difficulty-select" style="display: none;">
-                <div class="background-image"></div>
-                <div class="difficulty-content">
-                  <div class="title">“흑 VS 백”</div>
-                  <div class="subtitle">원하는 난이도를 고르세요</div>
-                  <div class="difficulty-row">
-                    <img class="difficulty-img" src="assets/images/ui/difficulty_easy.png" alt="Easy">
-                    <img class="difficulty-img" src="assets/images/ui/difficulty_normal.png" alt="Normal">
-                    <img class="difficulty-img" src="assets/images/ui/difficulty_hard.png" alt="Hard">
+                <!-- 효과음 설정 -->
+                <div class="settings-section">
+                  <div class="settings-label">
+                    <span class="settings-text">효과음</span>
+                    <span class="volume-percentage" id="sfx-display">70%</span>
+                  </div>
+                  <div class="custom-volume-control">
+                    <img
+                      src="assets/images/ui/volume_min.svg"
+                      alt="Volume Min"
+                      class="volume-icon volume-min"
+                    />
+                    <input
+                      type="range"
+                      min="0"
+                      max="100"
+                      value="70"
+                      class="volume-slider"
+                      id="sfx-volume-range"
+                    />
+                    <img
+                      src="assets/images/ui/volume_max.svg"
+                      alt="Volume Max"
+                      class="volume-icon volume-max"
+                    />
                   </div>
                 </div>
-            </div>
 
-            <!-- 게임 화면 -->
-            <div id="game" style="display: none;">
-                <div class="game-background">
-                    <p>게임 화면</p>
+                <!-- 화면 효과 설정 -->
+                <div class="settings-section">
+                  <div class="settings-label">
+                    <span class="settings-text">화면 효과</span>
+                  </div>
+                  <div class="settings-toggles">
+                    <label class="settings-toggle">
+                      <input type="checkbox" id="particles-toggle" checked />
+                      <span class="toggle-slider"></span>
+                      <span class="toggle-text">파티클 효과</span>
+                    </label>
+                    <label class="settings-toggle">
+                      <input type="checkbox" id="animations-toggle" checked />
+                      <span class="toggle-slider"></span>
+                      <span class="toggle-text">애니메이션</span>
+                    </label>
+                  </div>
                 </div>
-            </div>
 
-            <!-- 성공 화면 -->
-            <div id="success" style="display: none;">
-                <div class="result-background" style="background-image: url('assets/images/backgrounds/success_background.gif');"></div>
-                <div class="success-timer">
-                    <p>15초 뒤 다음 스테이지로 이동합니다.</p>
-                    <img src="assets/images/ui/back_white.png" alt="back" />
+                <!-- 설정 초기화 -->
+                <div class="settings-footer">
+                  <button class="settings-reset-btn" id="settings-reset">
+                    설정 초기화
+                  </button>
                 </div>
-                <div class="success-main-text">맛있어요. 진짜 맛있어요.</div>
-                <div class="success-sub-text">생존하셨습니다.</div>
+              </div>
+
+              <!-- 배경음악 오디오 태그 -->
+              <audio
+                id="main-bgm"
+                src="assets/sounds/bgm/bgm.mp3"
+                loop
+                preload="auto"
+              ></audio>
             </div>
-            <!-- 실패 화면 -->
-            <div id="failure" style="display: none;">
-                <div class="result-background" style="background-image: url('assets/images/backgrounds/fail_background.gif');"></div>
-                <div class="failure-timer">
-                    <p>15초 뒤 다시 도전할 수 있습니다.</p>
-                    <img src="assets/images/ui/back_white.png" alt="back" />
-                </div>
-                <div class="failure-main-text">이븐하지 않잖아요!</div>
-                <div class="failure-sub-text">다시 시도해보세요.</div>
-            </div>
+          </div>
         </div>
-    </body>
+      </div>
+
+      <!-- 흑백 선택화면 -->
+      <div id="black-white" style="display: none">
+        <img
+          src="assets/images/backgrounds/yinyang.png"
+          alt="YinYang"
+          class="yinyang-foreground"
+        />
+        <!-- 진행 표시기 -->
+        <div class="progress-indicator">
+          <div class="progress-dot current"></div>
+          <div class="progress-dot"></div>
+          <div class="progress-dot"></div>
+          <div class="progress-dot"></div>
+        </div>
+        <div class="blackwhite-bg">
+          <div class="blackwhite-center-group">
+            <div class="blackwhite-center">
+              <div class="blackwhite-title">"흑 <b>VS</b> 백"</div>
+              <div class="blackwhite-subtitle">
+                흑과 백 중 하나를 선택하세요
+              </div>
+            </div>
+            <div class="blackwhite-centerbox">
+              <div class="blackwhite-half blackwhite-left">
+                <img
+                  src="assets/images/ui/chinese_black.png"
+                  alt="흑"
+                  class="blackwhite-char"
+                />
+              </div>
+              <div class="blackwhite-half blackwhite-right">
+                <img
+                  src="assets/images/ui/chinese_white.png"
+                  alt="백"
+                  class="blackwhite-char"
+                />
+              </div>
+            </div>
+            <div class="blackwhite-descbox">
+              <div class="blackwhite-desc left">
+                흑을 고르면, 미슐랭 스타를 획득시<br />기름의 크기가 커집니다.
+              </div>
+              <div class="blackwhite-desc right">
+                백을 고르면, 미슐랭 스타를 획득시<br />
+                기름의 갯수가 많아집니다.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 조리도구 선택 화면 -->
+      <div id="tool-select" style="display: none">
+        <!-- 배경 이미지 -->
+        <div class="background-image"></div>
+
+        <!-- 진행 표시기 -->
+        <div class="progress-indicator">
+          <div class="progress-dot completed"></div>
+          <div class="progress-dot current"></div>
+          <div class="progress-dot"></div>
+          <div class="progress-dot"></div>
+        </div>
+
+        <!-- 중앙 텍스트 -->
+        <div class="center-text">
+          <div class="title">"흑 <b>VS</b> 백"</div>
+          <div class="subtitle">원하는 조리도구를 고르세요</div>
+        </div>
+
+        <!-- 도구 컨테이너 -->
+        <div class="tools-container">
+          <!-- 웍 (활성화) -->
+          <div class="tool-wrapper">
+            <img
+              class="tool tool-top-left"
+              src="assets/images/tools/wok.png"
+              alt="Black Wok"
+              data-tool="Wok"
+            />
+            <div class="tool-name">웍 (Wok)</div>
+          </div>
+
+          <!-- 골든 팬 (비활성화) -->
+          <div class="tool-wrapper">
+            <img
+              class="tool tool-top-right disabled"
+              src="assets/images/tools/golden_pan_disabled.png"
+              alt="Gold Pan (disabled)"
+              data-tool="Gold Pan"
+            />
+            <div class="tool-name">황금 팬 (Gold Pan)</div>
+          </div>
+
+          <!-- 골든 뒤집개 (비활성화) -->
+          <div class="tool-wrapper">
+            <img
+              class="tool tool-bottom-left disabled"
+              src="assets/images/tools/golden_turner_disabled.png"
+              alt="Gold Turner (disabled)"
+              data-tool="Gold Turner"
+            />
+            <div class="tool-name">황금 뒤집개 (Gold Turner)</div>
+          </div>
+
+          <!-- 나이프 (활성화) -->
+          <div class="tool-wrapper">
+            <img
+              class="tool tool-bottom-right"
+              src="assets/images/tools/knife.png"
+              alt="Knife"
+              data-tool="Knife"
+            />
+            <div class="tool-name">나이프 (Knife)</div>
+          </div>
+        </div>
+
+        <!-- 도구 설명 패널 -->
+        <div class="tool-description" id="tool-description">
+          <h3>도구를 선택하세요</h3>
+          <p>마우스를 올려서 각 도구의 특성을 확인할 수 있습니다.</p>
+        </div>
+      </div>
+
+      <!-- 난이도 선택 화면 -->
+      <div id="difficulty-select" style="display: none">
+        <!-- 진행 표시기 -->
+        <div class="progress-indicator">
+          <div class="progress-dot completed"></div>
+          <div class="progress-dot completed"></div>
+          <div class="progress-dot current"></div>
+          <div class="progress-dot"></div>
+        </div>
+
+        <!-- 중앙 컨텐츠 -->
+        <div class="difficulty-content">
+          <div class="title">"흑 <b>VS</b> 백"</div>
+          <div class="subtitle">원하는 난이도를 고르세요</div>
+
+          <!-- 난이도 카드 컨테이너 -->
+          <div class="difficulty-container">
+            <!-- 쉬움 -->
+            <div class="difficulty-card easy" data-difficulty="Easy">
+              <img
+                class="difficulty-image"
+                src="assets/images/ui/difficulty_easy.png"
+                alt="Easy Difficulty"
+              />
+              <div class="difficulty-name">쉬움</div>
+              <div class="difficulty-description">
+                편안하게 즐길 수 있는<br />
+                초보자를 위한 난이도
+              </div>
+            </div>
+
+            <!-- 보통 -->
+            <div class="difficulty-card normal" data-difficulty="Normal">
+              <img
+                class="difficulty-image"
+                src="assets/images/ui/difficulty_normal.png"
+                alt="Normal Difficulty"
+              />
+              <div class="difficulty-name">보통</div>
+              <div class="difficulty-description">
+                적당한 도전을 원하는<br />
+                중급자를 위한 난이도
+              </div>
+            </div>
+
+            <!-- 어려움 -->
+            <div class="difficulty-card hard" data-difficulty="Hard">
+              <img
+                class="difficulty-image"
+                src="assets/images/ui/difficulty_hard.png"
+                alt="Hard Difficulty"
+              />
+              <div class="difficulty-name">어려움</div>
+              <div class="difficulty-description">
+                극한의 도전을 원하는<br />
+                고수를 위한 난이도
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 게임 화면 -->
+      <div id="game" style="display: none">
+        <!-- 게임 로딩 화면 -->
+        <div class="game-loading" id="game-loading">
+          <div class="loading-spinner"></div>
+          <div>게임을 준비하고 있습니다...</div>
+        </div>
+
+        <!-- 게임 메인 컨테이너 -->
+        <div class="game-container" id="game-container" style="display: none">
+          <!-- 게임 헤더 -->
+          <div class="game-header">
+            <div class="game-info-left">
+              <div class="level-display">LEVEL 1</div>
+              <div class="score-display">SCORE: 0</div>
+            </div>
+            <div class="game-info-center">
+              <div class="timer-display" id="game-timer">60</div>
+            </div>
+            <div class="game-info-right">
+              <button class="game-btn pause-btn" id="pause-btn">⏸️</button>
+            </div>
+          </div>
+
+          <!-- 게임 메인 영역 -->
+          <div class="game-main">
+            <!-- 게임 사이드바 -->
+            <div class="game-sidebar">
+              <div class="ingredients-panel">
+                <h3>🎯 필요한 재료</h3>
+                <div class="ingredients-required" id="ingredients-required">
+                  <!-- 동적으로 생성됨 -->
+                </div>
+                <h3>✅ 수집한 재료</h3>
+                <div class="ingredients-collected" id="ingredients-collected">
+                  <!-- 동적으로 생성됨 -->
+                </div>
+              </div>
+
+              <div class="stats-panel">
+                <div class="stat-item">
+                  <span class="stat-label">⭐ 미슐랭 스타</span>
+                  <span class="stat-value" id="michelin-count">0</span>
+                </div>
+                <div class="stat-item">
+                  <span class="stat-label">🎮 선택 효과</span>
+                  <span class="stat-value" id="side-effect">-</span>
+                </div>
+                <div class="stat-item">
+                  <span class="stat-label">🔧 조리도구</span>
+                  <span class="stat-value" id="selected-tool">-</span>
+                </div>
+                <div class="stat-item">
+                  <span class="stat-label">⚡ 난이도</span>
+                  <span class="stat-value" id="selected-difficulty">-</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- 게임 캔버스 영역 -->
+            <div class="game-canvas-container">
+              <canvas id="game-canvas" width="600" height="500"></canvas>
+
+              <!-- 게임 오버레이 (일시정지 메뉴) -->
+              <div class="game-overlay" id="game-overlay" style="display: none">
+                <div class="overlay-content">
+                  <h2 id="overlay-title">게임 일시정지</h2>
+                  <div class="overlay-buttons">
+                    <button class="game-btn continue-btn" id="continue-btn">
+                      ▶️ 계속하기
+                    </button>
+                    <button class="game-btn home-btn" id="home-btn">
+                      🏠 홈으로
+                    </button>
+                    <button class="game-btn restart-btn" id="restart-btn">
+                      🔄 다시시작
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 성공 화면 -->
+      <div id="success" style="display: none">
+        <div
+          class="result-background"
+          style="
+            background-image: url('assets/images/backgrounds/success_background.gif');
+          "
+        ></div>
+        <div class="success-timer">
+          <p>15초 뒤 다음 스테이지로 이동합니다.</p>
+          <img src="assets/images/ui/back_white.png" alt="back" />
+        </div>
+        <div class="success-main-text">맛있어요. 진짜 맛있어요.</div>
+        <div class="success-sub-text">생존하셨습니다.</div>
+      </div>
+      <!-- 실패 화면 -->
+      <div id="failure" style="display: none">
+        <div
+          class="result-background"
+          style="
+            background-image: url('assets/images/backgrounds/fail_background.gif');
+          "
+        ></div>
+        <div class="failure-timer">
+          <p>15초 뒤 다시 도전할 수 있습니다.</p>
+          <img src="assets/images/ui/back_white.png" alt="back" />
+        </div>
+        <div class="failure-main-text">이븐하지 않잖아요!</div>
+        <div class="failure-sub-text">다시 시도해보세요.</div>
+      </div>
+    </div>
+  </body>
 </html>
