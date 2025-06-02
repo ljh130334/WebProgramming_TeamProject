@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="css/main.css" />
     <link rel="stylesheet" href="css/settings.css" />
     <link rel="stylesheet" href="css/blackwhite.css" />
+    <link rel="stylesheet" href="css/game.css" />
     <link rel="stylesheet" href="css/success.css" />
     <link rel="stylesheet" href="css/failure.css" />
     <link rel="stylesheet" href="css/tools.css" />
@@ -335,8 +336,86 @@
 
       <!-- 게임 화면 -->
       <div id="game" style="display: none">
-        <div class="game-background">
-          <p>게임 화면</p>
+        <!-- 게임 로딩 화면 -->
+        <div class="game-loading" id="game-loading">
+          <div class="loading-spinner"></div>
+          <div>게임을 준비하고 있습니다...</div>
+        </div>
+
+        <!-- 게임 메인 컨테이너 -->
+        <div class="game-container" id="game-container" style="display: none">
+          <!-- 게임 헤더 -->
+          <div class="game-header">
+            <div class="game-info-left">
+              <div class="level-display">LEVEL 1</div>
+              <div class="score-display">SCORE: 0</div>
+            </div>
+            <div class="game-info-center">
+              <div class="timer-display" id="game-timer">60</div>
+            </div>
+            <div class="game-info-right">
+              <button class="game-btn pause-btn" id="pause-btn">⏸️</button>
+            </div>
+          </div>
+
+          <!-- 게임 메인 영역 -->
+          <div class="game-main">
+            <!-- 게임 사이드바 -->
+            <div class="game-sidebar">
+              <div class="ingredients-panel">
+                <h3>🎯 필요한 재료</h3>
+                <div class="ingredients-required" id="ingredients-required">
+                  <!-- 동적으로 생성됨 -->
+                </div>
+                <h3>✅ 수집한 재료</h3>
+                <div class="ingredients-collected" id="ingredients-collected">
+                  <!-- 동적으로 생성됨 -->
+                </div>
+              </div>
+
+              <div class="stats-panel">
+                <div class="stat-item">
+                  <span class="stat-label">⭐ 미슐랭 스타</span>
+                  <span class="stat-value" id="michelin-count">0</span>
+                </div>
+                <div class="stat-item">
+                  <span class="stat-label">🎮 선택 효과</span>
+                  <span class="stat-value" id="side-effect">-</span>
+                </div>
+                <div class="stat-item">
+                  <span class="stat-label">🔧 조리도구</span>
+                  <span class="stat-value" id="selected-tool">-</span>
+                </div>
+                <div class="stat-item">
+                  <span class="stat-label">⚡ 난이도</span>
+                  <span class="stat-value" id="selected-difficulty">-</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- 게임 캔버스 영역 -->
+            <div class="game-canvas-container">
+              <canvas id="game-canvas" width="600" height="500"></canvas>
+
+              <!-- 게임 오버레이 (일시정지 메뉴) -->
+              <div class="game-overlay" id="game-overlay" style="display: none">
+                <div class="overlay-content">
+                  <h2 id="overlay-title">게임 일시정지</h2>
+                  <div class="overlay-buttons">
+                    <button class="game-btn continue-btn" id="continue-btn">
+                      ▶️ 계속하기
+                    </button>
+                    <button class="game-btn home-btn" id="home-btn">
+                      🏠 홈으로
+                    </button>
+                    <button class="game-btn restart-btn" id="restart-btn">
+                      🔄 다시시작
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
