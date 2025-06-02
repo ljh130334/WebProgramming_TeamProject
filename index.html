@@ -273,26 +273,62 @@
 
       <!-- 난이도 선택 화면 -->
       <div id="difficulty-select" style="display: none">
-        <div class="background-image"></div>
+        <!-- 진행 표시기 -->
+        <div class="progress-indicator">
+          <div class="progress-dot completed"></div>
+          <div class="progress-dot completed"></div>
+          <div class="progress-dot current"></div>
+          <div class="progress-dot"></div>
+        </div>
+
+        <!-- 중앙 컨텐츠 -->
         <div class="difficulty-content">
-          <div class="title">"흑 VS 백"</div>
+          <div class="title">"흑 <b>VS</b> 백"</div>
           <div class="subtitle">원하는 난이도를 고르세요</div>
-          <div class="difficulty-row">
-            <img
-              class="difficulty-img"
-              src="assets/images/ui/difficulty_easy.png"
-              alt="Easy"
-            />
-            <img
-              class="difficulty-img"
-              src="assets/images/ui/difficulty_normal.png"
-              alt="Normal"
-            />
-            <img
-              class="difficulty-img"
-              src="assets/images/ui/difficulty_hard.png"
-              alt="Hard"
-            />
+
+          <!-- 난이도 카드 컨테이너 -->
+          <div class="difficulty-container">
+            <!-- 쉬움 -->
+            <div class="difficulty-card easy" data-difficulty="Easy">
+              <img
+                class="difficulty-image"
+                src="assets/images/ui/difficulty_easy.png"
+                alt="Easy Difficulty"
+              />
+              <div class="difficulty-name">쉬움</div>
+              <div class="difficulty-description">
+                편안하게 즐길 수 있는<br />
+                초보자를 위한 난이도
+              </div>
+            </div>
+
+            <!-- 보통 -->
+            <div class="difficulty-card normal" data-difficulty="Normal">
+              <img
+                class="difficulty-image"
+                src="assets/images/ui/difficulty_normal.png"
+                alt="Normal Difficulty"
+              />
+              <div class="difficulty-name">보통</div>
+              <div class="difficulty-description">
+                적당한 도전을 원하는<br />
+                중급자를 위한 난이도
+              </div>
+            </div>
+
+            <!-- 어려움 -->
+            <div class="difficulty-card hard" data-difficulty="Hard">
+              <img
+                class="difficulty-image"
+                src="assets/images/ui/difficulty_hard.png"
+                alt="Hard Difficulty"
+              />
+              <div class="difficulty-name">어려움</div>
+              <div class="difficulty-description">
+                극한의 도전을 원하는<br />
+                고수를 위한 난이도
+              </div>
+            </div>
           </div>
         </div>
       </div>
