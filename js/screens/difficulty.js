@@ -6,22 +6,42 @@ function initDifficultyScreen() {
   // 화면 표시 시 초기화
   $(document).on("screen-changed", function (e, screenId) {
     if (screenId === "difficulty-select") {
+      // 현재 단계 초기화 (새로 게임 시작할 때)
+      if (!sessionStorage.getItem("currentStage")) {
+        sessionStorage.setItem("currentStage", "1");
+      }
       startDifficultyAnimations();
     }
   });
 
-  // 난이도 선택 이벤트
-  $(document).on("click", ".difficulty-card", function () {
-    const difficulty = $(this).data("difficulty");
-    handleDifficultySelection($(this), difficulty);
-  });
+  // 난이도 선택 이벤트 (이벤트 위임 방식으로 수정 + 중복 방지)
+  $(document)
+    .off("click", ".difficulty-card")
+    .on("click", ".difficulty-card", function (e) {
+      e.stopPropagation();
 
-  // 호버 효과
-  $(document).on("mouseenter", ".difficulty-card", function () {
-    if (!window.particlesDisabled) {
-      createDifficultyHoverEffect($(this));
-    }
-  });
+      // 이미 선택 중인 경우 무시
+      if ($(this).hasClass("selected") || $(this).hasClass("selecting")) {
+        return;
+      }
+
+      const difficulty = $(this).data("difficulty");
+      handleDifficultySelection($(this), difficulty);
+    });
+
+  // 호버 효과 (중복 방지)
+  $(document)
+    .off("mouseenter", ".difficulty-card")
+    .on("mouseenter", ".difficulty-card", function () {
+      // 선택 중이거나 선택된 카드는 호버 효과 무시
+      if ($(this).hasClass("selected") || $(this).hasClass("selecting")) {
+        return;
+      }
+
+      if (!window.particlesDisabled) {
+        createDifficultyHoverEffect($(this));
+      }
+    });
 }
 
 // ===========================================
@@ -30,6 +50,14 @@ function initDifficultyScreen() {
 
 function handleDifficultySelection($card, difficulty) {
   console.log("난이도 선택:", difficulty);
+
+  // 이미 선택 과정 중이면 중단
+  if (
+    $card.hasClass("selected") ||
+    $(".difficulty-card").hasClass("selecting")
+  ) {
+    return;
+  }
 
   // 다른 카드들 비활성화
   $(".difficulty-card").not($card).addClass("selecting");
@@ -58,10 +86,19 @@ function handleDifficultySelection($card, difficulty) {
 
   // 게임 화면으로 전환 (2초 후)
   setTimeout(() => {
+    // 상태 초기화 (다음 선택을 위해)
+    resetDifficultySelection();
+
     if (typeof switchToScreen === "function") {
       switchToScreen("game", 500);
     }
   }, 2000);
+}
+
+// 난이도 선택 상태 초기화
+function resetDifficultySelection() {
+  $(".difficulty-card").removeClass("selected selecting");
+  $(".difficulty-selection-message").remove();
 }
 
 // ===========================================
@@ -147,6 +184,9 @@ function getDifficultyColor(difficulty) {
 
 // 난이도 선택 성공 메시지
 function showDifficultyMessage(difficulty) {
+  // 기존 메시지 제거
+  $(".difficulty-selection-message").remove();
+
   const messages = {
     Easy: "쉬움 난이도를 선택했습니다! 🌟",
     Normal: "보통 난이도를 선택했습니다! ⚡",
@@ -171,6 +211,9 @@ function showDifficultyMessage(difficulty) {
 
 // 화면 애니메이션 시작
 function startDifficultyAnimations() {
+  // 화면 진입 시 상태 초기화
+  resetDifficultySelection();
+
   // 카드들 순차 등장
   $(".difficulty-card").each(function (index) {
     $(this).css({
@@ -256,6 +299,19 @@ $("<style>")
       font-size: 16px;
       opacity: 0.8;
     }
+
+    /* 선택 중/선택된 카드 스타일 */
+    .difficulty-card.selecting {
+      opacity: 0.5;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+
+    .difficulty-card.selected {
+      transform: scale(1.1);
+      pointer-events: none;
+      transition: transform 0.3s ease;
+    }
   `
   )
   .appendTo("head");
@@ -273,8 +329,11 @@ $(document).on("screen-changed", function (e, screenId) {
       }
     }, 300);
   } else {
-    // 난이도 선택 화면 전용 파티클 정리
-    $(".difficulty-exclusive").remove();
+    // 난이도 선택 화면을 떠날 때 정리
+    if (screenId !== "difficulty-select") {
+      resetDifficultySelection();
+      $(".difficulty-exclusive").remove();
+    }
   }
 });
 
