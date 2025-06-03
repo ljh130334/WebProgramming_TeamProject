@@ -1,3 +1,4 @@
+// 게임 메인 로직 - 난이도별 요리 시스템
 $(document).ready(function () {
   initGameSystem();
 });
@@ -43,11 +44,29 @@ const BLOCKS = {
   BOMB: { color: "#F44336", points: 20 },
 };
 
-// 난이도별 재료
-const RECIPES = {
-  Easy: ["🥕", "🧅", "🥩", "🍅"],
-  Normal: ["🥕", "🧅", "🥩", "🍅", "🥔", "🌽"],
-  Hard: ["🥕", "🧅", "🥩", "🍅", "🥔", "🌽", "🥒", "🍆"],
+// 난이도별 요리 시스템
+const DIFFICULTY_RECIPES = {
+  Easy: {
+    name: "햄버거",
+    emoji: "🍔",
+    ingredients: ["🍞", "🥩", "🧀", "🥬", "🍅"],
+    time: 90,
+    description: "간단하고 맛있는 햄버거 만들기",
+  },
+  Normal: {
+    name: "피자",
+    emoji: "🍕",
+    ingredients: ["🫓", "🧀", "🍅", "🫒", "🌶️", "🧅", "🍄"],
+    time: 75,
+    description: "정통 이탈리안 피자 만들기",
+  },
+  Hard: {
+    name: "비빔밥",
+    emoji: "🍚",
+    ingredients: ["🍚", "🥕", "🥬", "🥩", "🥒", "🍄", "🥚", "🌶️", "🧄"],
+    time: 60,
+    description: "한국 전통 비빔밥 만들기",
+  },
 };
 
 // ===========================================
@@ -108,12 +127,14 @@ function startGame() {
 }
 
 function resetGame() {
+  // 현재 난이도의 요리 정보 가져오기
+  const currentRecipe = DIFFICULTY_RECIPES[game.selectedDifficulty];
+
   // 시간 설정
-  const timeSettings = { Easy: 90, Normal: 75, Hard: 60 };
-  game.timeLeft = timeSettings[game.selectedDifficulty];
+  game.timeLeft = currentRecipe.time;
 
   // 재료 설정
-  game.requiredIngredients = [...RECIPES[game.selectedDifficulty]];
+  game.requiredIngredients = [...currentRecipe.ingredients];
   game.collectedIngredients = [];
   game.michelinStars = 0;
   game.score = 0;
@@ -135,6 +156,31 @@ function resetGame() {
 
   generateBlocks();
   updateIngredientsDisplay();
+  updateRecipeDisplay();
+}
+
+function updateRecipeDisplay() {
+  const currentRecipe = DIFFICULTY_RECIPES[game.selectedDifficulty];
+
+  // 레벨 표시 업데이트 (난이도 정보 포함)
+  const difficultyText = {
+    Easy: "쉬움",
+    Normal: "보통",
+    Hard: "어려움",
+  };
+
+  $(".level-display").html(
+    `${currentRecipe.emoji} ${currentRecipe.name} (${
+      difficultyText[game.selectedDifficulty]
+    })`
+  );
+
+  // 사이드바 헤더 업데이트
+  $("#ingredients-required")
+    .parent()
+    .find("h3")
+    .first()
+    .html(`🎯 ${currentRecipe.name} 재료`);
 }
 
 // ===========================================
@@ -143,7 +189,11 @@ function resetGame() {
 
 function generateBlocks() {
   game.blocks = [];
-  const ingredients = ["🥕", "🧅", "🥩", "🍅", "🥔", "🌽", "🥒", "🍆"];
+  const currentRecipe = DIFFICULTY_RECIPES[game.selectedDifficulty];
+
+  // 현재 요리의 재료들과 추가 재료들
+  const extraIngredients = ["🥓", "🥖", "🌮", "🥙", "🌭", "🍖", "🧈", "🥝"];
+  const allIngredients = [...currentRecipe.ingredients, ...extraIngredients];
 
   for (let row = 0; row < 3; row++) {
     for (let col = 0; col < 8; col++) {
@@ -154,12 +204,23 @@ function generateBlocks() {
       let type,
         content = "";
 
-      if (rand < 0.4) {
+      if (rand < 0.5) {
+        // 재료 블록 (필요한 재료가 더 자주 나오도록)
         type = "INGREDIENT";
-        content = ingredients[Math.floor(Math.random() * ingredients.length)];
-      } else if (rand < 0.7) {
+        if (Math.random() < 0.7) {
+          // 70% 확률로 필요한 재료
+          content =
+            currentRecipe.ingredients[
+              Math.floor(Math.random() * currentRecipe.ingredients.length)
+            ];
+        } else {
+          // 30% 확률로 다른 재료
+          content =
+            allIngredients[Math.floor(Math.random() * allIngredients.length)];
+        }
+      } else if (rand < 0.75) {
         type = "NORMAL";
-      } else if (rand < 0.85) {
+      } else if (rand < 0.9) {
         type = "MICHELIN";
         content = "⭐";
       } else {
@@ -197,7 +258,9 @@ function moveBlocksDown() {
 }
 
 function addNewBlocks() {
-  const ingredients = ["🥕", "🧅", "🥩", "🍅", "🥔", "🌽", "🥒", "🍆"];
+  const currentRecipe = DIFFICULTY_RECIPES[game.selectedDifficulty];
+  const extraIngredients = ["🥓", "🥖", "🌮", "🥙", "🌭", "🍖", "🧈", "🥝"];
+  const allIngredients = [...currentRecipe.ingredients, ...extraIngredients];
 
   for (let col = 0; col < 8; col++) {
     if (Math.random() < 0.6) {
@@ -206,10 +269,19 @@ function addNewBlocks() {
       let type,
         content = "";
 
-      if (rand < 0.5) {
+      if (rand < 0.6) {
         type = "INGREDIENT";
-        content = ingredients[Math.floor(Math.random() * ingredients.length)];
-      } else if (rand < 0.8) {
+        if (Math.random() < 0.8) {
+          // 필요한 재료가 더 자주 나오도록
+          content =
+            currentRecipe.ingredients[
+              Math.floor(Math.random() * currentRecipe.ingredients.length)
+            ];
+        } else {
+          content =
+            allIngredients[Math.floor(Math.random() * allIngredients.length)];
+        }
+      } else if (rand < 0.85) {
         type = "NORMAL";
       } else {
         type = "MICHELIN";
@@ -274,15 +346,14 @@ function updateGame() {
     // 아래로 떨어짐
     if (ball.y > game.canvas.height + ball.radius) {
       if (game.selectedSide === "black") {
+        // 흑 선택: 공이 사라지면 게임 오버
         game.balls.splice(index, 1);
         if (game.balls.length === 0) {
           endGame(false);
         }
       } else {
-        // 백 선택시 공 재생성
-        ball.x = game.canvas.width / 2;
-        ball.y = game.canvas.height - 50;
-        ball.dy = -Math.abs(ball.dy);
+        // 백 선택: 공이 떨어져도 게임 오버
+        endGame(false);
       }
     }
   });
@@ -390,6 +461,27 @@ function drawGame() {
   gradient.addColorStop(1, "#16213e");
   ctx.fillStyle = gradient;
   ctx.fillRect(0, 0, game.canvas.width, game.canvas.height);
+
+  // 요리 표시 (캔버스 상단)
+  const currentRecipe = DIFFICULTY_RECIPES[game.selectedDifficulty];
+  ctx.font = "bold 24px Arial";
+  ctx.fillStyle = "#fff";
+  ctx.textAlign = "center";
+  ctx.textBaseline = "top";
+  ctx.fillText(
+    `${currentRecipe.emoji} ${currentRecipe.name} 만들기`,
+    game.canvas.width / 2,
+    10
+  );
+
+  // 재료 개수 표시
+  ctx.font = "16px Arial";
+  ctx.fillStyle = "#FFD700";
+  ctx.fillText(
+    `남은 재료: ${game.requiredIngredients.length}/${currentRecipe.ingredients.length}`,
+    game.canvas.width / 2,
+    40
+  );
 
   // 블록
   game.blocks.forEach((block) => {
@@ -502,7 +594,7 @@ function drawGame() {
 // ===========================================
 
 function updateGameInfo() {
-  $(".level-display").text("LEVEL 1");
+  updateRecipeDisplay();
   $(".score-display").text(`SCORE: ${game.score}`);
   $("#michelin-count").text(game.michelinStars);
   $("#side-effect").text(
@@ -612,12 +704,19 @@ function endGame(success, goHome = false) {
     return;
   }
 
-  // 결과 화면으로
+  // 결과 정보 저장
+  const currentRecipe = DIFFICULTY_RECIPES[game.selectedDifficulty];
+  sessionStorage.setItem("completedRecipe", currentRecipe.name);
+  sessionStorage.setItem("recipeEmoji", currentRecipe.emoji);
+  sessionStorage.setItem("gameDifficulty", game.selectedDifficulty);
+
   if (success) {
+    sessionStorage.setItem("gameResult", "success");
     if (typeof switchToScreen === "function") {
       switchToScreen("success", 500);
     }
   } else {
+    sessionStorage.setItem("gameResult", "failure");
     if (typeof switchToScreen === "function") {
       switchToScreen("failure", 500);
     }
