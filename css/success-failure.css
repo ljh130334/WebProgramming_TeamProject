@@ -1,4 +1,4 @@
-/* 통합 결과 화면 스타일 */
+/* 통합 결과 화면 스타일 - 단계별 진행 시스템 추가 */
 
 /* ===========================================
    기본 레이아웃
@@ -35,8 +35,8 @@
 }
 
 /* ===========================================
-     결과 컨테이너
-     =========================================== */
+        결과 컨테이너
+        =========================================== */
 
 .result-container {
   position: relative;
@@ -71,8 +71,8 @@
 }
 
 /* ===========================================
-     중앙 컨텐츠
-     =========================================== */
+        중앙 컨텐츠
+        =========================================== */
 
 .result-content {
   background: rgba(255, 255, 255, 0.1);
@@ -82,7 +82,7 @@
   padding: 50px 40px;
   text-align: center;
   box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4);
-  max-width: 600px;
+  max-width: 700px;
   width: 100%;
   animation: resultAppear 0.8s ease-out;
   position: relative;
@@ -100,8 +100,8 @@
 }
 
 /* ===========================================
-     아이콘
-     =========================================== */
+        아이콘
+        =========================================== */
 
 .result-icon {
   margin-bottom: 30px;
@@ -149,8 +149,8 @@
 }
 
 /* ===========================================
-     텍스트
-     =========================================== */
+        텍스트
+        =========================================== */
 
 .result-title {
   font-size: 42px;
@@ -199,8 +199,38 @@
 }
 
 /* ===========================================
-     타이머
-     =========================================== */
+        도구 잠금 해제 알림
+        =========================================== */
+
+.unlock-notification {
+  background: linear-gradient(135deg, #ffd700, #ffa000);
+  color: #000;
+  padding: 15px 25px;
+  border-radius: 15px;
+  margin-bottom: 20px;
+  font-size: 18px;
+  font-weight: bold;
+  text-shadow: none;
+  animation: unlockPulse 2s ease-in-out infinite,
+    titleSlide 0.8s ease-out 0.6s both;
+  box-shadow: 0 5px 20px rgba(255, 215, 0, 0.4);
+}
+
+@keyframes unlockPulse {
+  0%,
+  100% {
+    transform: scale(1);
+    box-shadow: 0 5px 20px rgba(255, 215, 0, 0.4);
+  }
+  50% {
+    transform: scale(1.05);
+    box-shadow: 0 8px 30px rgba(255, 215, 0, 0.6);
+  }
+}
+
+/* ===========================================
+        타이머
+        =========================================== */
 
 .result-timer {
   background: rgba(255, 255, 255, 0.2);
@@ -231,8 +261,8 @@
 }
 
 /* ===========================================
-     버튼들
-     =========================================== */
+        버튼들
+        =========================================== */
 
 .result-buttons {
   display: flex;
@@ -253,6 +283,7 @@
   text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
   position: relative;
   overflow: hidden;
+  min-width: 120px;
 }
 
 .result-btn::before {
@@ -327,8 +358,8 @@
 }
 
 /* ===========================================
-     클릭 힌트
-     =========================================== */
+        클릭 힌트
+        =========================================== */
 
 .click-hint {
   position: absolute;
@@ -353,8 +384,8 @@
 }
 
 /* ===========================================
-     파티클 애니메이션
-     =========================================== */
+        파티클 애니메이션
+        =========================================== */
 
 .result-particle {
   animation: particleFloat 4s ease-out forwards;
@@ -400,69 +431,45 @@
 }
 
 /* ===========================================
-     반응형 디자인
-     =========================================== */
+        콤보 효과 (황금 뒤집개 전용)
+        =========================================== */
 
-@media (max-width: 768px) {
-  .result-content {
-    padding: 40px 30px;
-    margin: 20px;
-  }
-
-  .icon-wrapper {
-    width: 100px;
-    height: 100px;
-    font-size: 50px;
-  }
-
-  .result-title {
-    font-size: 32px;
-  }
-
-  .result-subtitle {
-    font-size: 20px;
-  }
-
-  .result-message {
-    font-size: 24px;
-  }
-
-  .result-buttons {
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .result-btn {
-    width: 200px;
-  }
+.combo-effect {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #ffd700;
+  font-size: 48px;
+  font-weight: bold;
+  text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.8);
+  z-index: 5;
+  animation: comboAnimation 2s ease-out forwards;
+  pointer-events: none;
 }
 
-@media (max-width: 480px) {
-  .result-content {
-    padding: 30px 20px;
-    margin: 10px;
+@keyframes comboAnimation {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.5);
   }
-
-  .result-title {
-    font-size: 28px;
+  20% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.2);
   }
-
-  .result-subtitle {
-    font-size: 18px;
+  80% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
   }
-
-  .result-message {
-    font-size: 20px;
-  }
-
-  .result-timer span {
-    font-size: 16px;
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.8) translateY(-50px);
   }
 }
 
 /* ===========================================
-     애니메이션 비활성화
-     =========================================== */
+        애니메이션 비활성화
+        =========================================== */
 
 .no-animations .result-content,
 .no-animations .icon-wrapper,
@@ -470,7 +477,9 @@
 .no-animations .result-subtitle,
 .no-animations .result-message,
 .no-animations .result-timer,
-.no-animations .result-buttons {
+.no-animations .result-buttons,
+.no-animations .unlock-notification,
+.no-animations .combo-effect {
   animation: none !important;
 }
 
@@ -479,8 +488,8 @@
 }
 
 /* ===========================================
-     접근성
-     =========================================== */
+        접근성
+        =========================================== */
 
 @media (prefers-reduced-motion: reduce) {
   .result-content,
@@ -490,7 +499,9 @@
   .result-message,
   .result-timer,
   .result-buttons,
-  .result-particle {
+  .result-particle,
+  .unlock-notification,
+  .combo-effect {
     animation: none !important;
   }
 

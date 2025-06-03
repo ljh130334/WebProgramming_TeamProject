@@ -1,4 +1,3 @@
-// 조리도구 선택 화면 JavaScript
 $(document).ready(function () {
   initToolSelectScreen();
 });
@@ -7,22 +6,26 @@ function initToolSelectScreen() {
   // 화면 표시 시 초기화
   $(document).on("screen-changed", function (e, screenId) {
     if (screenId === "tool-select") {
+      updateToolAvailability();
       startToolSelectAnimations();
     }
   });
 
-  // 도구 클릭 이벤트
-  $(document).on("click", ".tool-wrapper", function () {
-    const $tool = $(this).find(".tool");
+  // 도구 클릭 이벤트 (이벤트 위임 방식으로 변경)
+  $(document)
+    .off("click", ".tool-wrapper")
+    .on("click", ".tool-wrapper", function (e) {
+      e.stopPropagation();
+      const $tool = $(this).find(".tool");
 
-    if ($tool.hasClass("disabled")) {
-      handleDisabledToolClick($tool);
-      return;
-    }
+      if ($tool.hasClass("disabled")) {
+        handleDisabledToolClick($tool);
+        return;
+      }
 
-    const toolName = $tool.data("tool");
-    handleToolSelection($tool, toolName);
-  });
+      const toolName = $tool.data("tool");
+      handleToolSelection($tool, toolName);
+    });
 
   // 도구 호버 효과
   $(document).on("mouseenter", ".tool-wrapper", function () {
@@ -34,6 +37,8 @@ function initToolSelectScreen() {
       if (!window.particlesDisabled) {
         createToolHoverEffect($tool);
       }
+    } else {
+      showLockedToolDescription($tool);
     }
   });
 
@@ -43,12 +48,119 @@ function initToolSelectScreen() {
 }
 
 // ===========================================
+// 도구 가용성 업데이트
+// ===========================================
+
+function updateToolAvailability() {
+  const gameProgress =
+    typeof window.getGameProgress === "function"
+      ? window.getGameProgress()
+      : { unlockedTools: ["Wok", "Knife"] };
+
+  console.log("도구 가용성 업데이트:", gameProgress);
+
+  // 모든 도구 상태 업데이트
+  $(".tool").each(function () {
+    const toolName = $(this).data("tool");
+    const $toolWrapper = $(this).closest(".tool-wrapper");
+
+    if (gameProgress.unlockedTools.includes(toolName)) {
+      // 잠금 해제된 도구
+      $(this).removeClass("disabled");
+      updateToolImage($(this), toolName, false);
+
+      // 새로 해제된 도구 강조 효과
+      if (toolName === "Gold Pan" || toolName === "Gold Turner") {
+        $toolWrapper.addClass("newly-unlocked");
+        setTimeout(() => {
+          $toolWrapper.removeClass("newly-unlocked");
+        }, 3000);
+      }
+    } else {
+      // 잠금된 도구
+      $(this).addClass("disabled");
+      updateToolImage($(this), toolName, true);
+    }
+  });
+
+  // 잠금 해제 알림 표시
+  showUnlockNotifications(gameProgress);
+}
+
+function updateToolImage($tool, toolName, isLocked) {
+  const imageMap = {
+    Wok: isLocked
+      ? "assets/images/tools/wok_disabled.png"
+      : "assets/images/tools/wok.png",
+    Knife: isLocked
+      ? "assets/images/tools/knife_disabled.png"
+      : "assets/images/tools/knife.png",
+    "Gold Pan": isLocked
+      ? "assets/images/tools/golden_pan_disabled.png"
+      : "assets/images/tools/golden_pan.png",
+    "Gold Turner": isLocked
+      ? "assets/images/tools/golden_turner_disabled.png"
+      : "assets/images/tools/golden_turner.png",
+  };
+
+  if (imageMap[toolName]) {
+    $tool.attr("src", imageMap[toolName]);
+  }
+}
+
+function showUnlockNotifications(gameProgress) {
+  // 새로 해제된 도구가 있는지 확인
+  const newlyUnlocked = [];
+
+  if (
+    gameProgress.unlockedTools.includes("Gold Pan") &&
+    !sessionStorage.getItem("goldPanNotified")
+  ) {
+    newlyUnlocked.push("황금 팬");
+    sessionStorage.setItem("goldPanNotified", "true");
+  }
+
+  if (
+    gameProgress.unlockedTools.includes("Gold Turner") &&
+    !sessionStorage.getItem("goldTurnerNotified")
+  ) {
+    newlyUnlocked.push("황금 뒤집개");
+    sessionStorage.setItem("goldTurnerNotified", "true");
+  }
+
+  if (newlyUnlocked.length > 0) {
+    showToolUnlockNotification(newlyUnlocked);
+  }
+}
+
+// ===========================================
 // 도구 선택 화면 애니메이션
 // ===========================================
 
 function startToolSelectAnimations() {
   // 도구들 순차 등장
   animateToolsEntry();
+}
+
+function animateToolsEntry() {
+  $(".tool-wrapper").each(function (index) {
+    $(this)
+      .css({
+        opacity: "0",
+        transform: "translateY(50px)",
+      })
+      .delay(index * 200)
+      .animate(
+        {
+          opacity: 1,
+        },
+        500
+      )
+      .queue(function (next) {
+        $(this).css("transform", "translateY(0)");
+        next();
+      });
+  });
 }
 
 // ===========================================
@@ -93,6 +205,8 @@ function handleToolSelection(selectedTool, toolName) {
 
 // 비활성화된 도구 클릭 처리
 function handleDisabledToolClick($tool) {
+  const toolName = $tool.data("tool");
+
   // 흔들기 애니메이션
   $tool.addClass("shake");
   setTimeout(() => {
@@ -104,8 +218,15 @@ function handleDisabledToolClick($tool) {
     createLockParticles($tool);
   }
 
-  // 알림 메시지
-  showNotification("이 도구는 아직 잠겨있습니다! 🔒");
+  // 단계별 잠금 해제 조건 메시지
+  let unlockMessage = "이 도구는 아직 잠겨있습니다! 🔒";
+  if (toolName === "Gold Pan") {
+    unlockMessage = "1단계를 클리어하면 황금 팬이 해제됩니다! 🔒";
+  } else if (toolName === "Gold Turner") {
+    unlockMessage = "2단계를 클리어하면 황금 뒤집개가 해제됩니다! 🔒";
+  }
+
+  showNotification(unlockMessage);
 }
 
 // ===========================================
@@ -117,19 +238,36 @@ const toolDescriptions = {
     name: "웍 (Wok)",
     description:
       "빠른 열전도와 넓은 조리면으로 볶음 요리에 최적화된 도구입니다.",
+    stats: "기본 도구 | 속도: ⭐⭐⭐ | 효율: ⭐⭐⭐",
   },
   Knife: {
     name: "나이프 (Knife)",
     description:
       "정밀한 칼질로 재료를 완벽하게 준비할 수 있는 기본 도구입니다.",
+    stats: "기본 도구 | 정확도: ⭐⭐⭐ | 속도: ⭐⭐⭐",
   },
   "Gold Pan": {
     name: "황금 팬 (Gold Pan)",
     description: "전설의 요리사만이 사용할 수 있는 특별한 조리도구입니다.",
+    stats: "특수 도구 | 속도: ⭐⭐⭐⭐ | 효율: ⭐⭐⭐⭐ | 보너스 점수",
   },
   "Gold Turner": {
     name: "황금 뒤집개 (Gold Turner)",
     description: "마스터 셰프의 증표, 완벽한 뒤집기가 가능한 도구입니다.",
+    stats: "마스터 도구 | 정확도: ⭐⭐⭐⭐⭐ | 특수 능력: 자동 콤보",
+  },
+};
+
+const lockedToolMessages = {
+  "Gold Pan": {
+    name: "황금 팬 (잠김)",
+    description: "1단계를 클리어하면 사용할 수 있습니다.",
+    unlock: "해제 조건: 1단계 클리어",
+  },
+  "Gold Turner": {
+    name: "황금 뒤집개 (잠김)",
+    description: "2단계를 클리어하면 사용할 수 있습니다.",
+    unlock: "해제 조건: 2단계 클리어",
   },
 };
 
@@ -142,13 +280,29 @@ function showToolDescription($tool) {
     $descPanel.html(`
       <h3>${description.name}</h3>
       <p>${description.description}</p>
+      <div class="tool-stats">${description.stats}</div>
     `);
     $descPanel.addClass("show");
   }
 }
 
+function showLockedToolDescription($tool) {
+  const toolName = $tool.data("tool");
+  const lockedInfo = lockedToolMessages[toolName];
+
+  if (lockedInfo) {
+    const $descPanel = $("#tool-description");
+    $descPanel.html(`
+      <h3>${lockedInfo.name}</h3>
+      <p>${lockedInfo.description}</p>
+      <div class="tool-unlock-condition">${lockedInfo.unlock}</div>
+    `);
+    $descPanel.addClass("show locked");
+  }
+}
+
 function hideToolDescription() {
-  $("#tool-description").removeClass("show");
+  $("#tool-description").removeClass("show locked");
 }
 
 // ===========================================
@@ -323,6 +477,32 @@ function showToolSelectionMessage(toolName) {
   }, 1500);
 }
 
+// 도구 잠금 해제 알림
+function showToolUnlockNotification(unlockedTools) {
+  const $notification = $('<div class="tool-unlock-notification"></div>');
+  $notification.html(`
+    <div class="unlock-icon">🎉</div>
+    <div class="unlock-title">새로운 도구 해제!</div>
+    <div class="unlock-tools">${unlockedTools.join(", ")}</div>
+    <div class="unlock-subtitle">이제 사용할 수 있습니다!</div>
+  `);
+
+  $("body").append($notification);
+
+  // 등장 애니메이션
+  setTimeout(() => {
+    $notification.addClass("show");
+  }, 100);
+
+  // 5초 후 제거
+  setTimeout(() => {
+    $notification.removeClass("show");
+    setTimeout(() => {
+      $notification.remove();
+    }, 500);
+  }, 5000);
+}
+
 // 알림 표시 함수
 function showNotification(message) {
   const $notification = $('<div class="settings-notification"></div>');
@@ -390,6 +570,107 @@ $("<style>")
       transform: translateY(-100vh) rotate(180deg);
       opacity: 0;
     }
+  }
+
+  /* 새로 해제된 도구 강조 */
+  .tool-wrapper.newly-unlocked {
+    animation: newlyUnlockedGlow 3s ease-in-out;
+  }
+
+  @keyframes newlyUnlockedGlow {
+    0%, 100% {
+      box-shadow: none;
+    }
+    50% {
+      box-shadow: 0 0 30px rgba(255, 215, 0, 0.8);
+    }
+  }
+
+  /* 도구 설명 패널 잠금 상태 */
+  .tool-description.locked {
+    border-color: rgba(255, 0, 0, 0.3);
+    background: rgba(255, 0, 0, 0.1);
+  }
+
+  .tool-description .tool-stats {
+    margin-top: 10px;
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.8);
+    font-style: italic;
+  }
+
+  .tool-description .tool-unlock-condition {
+    margin-top: 15px;
+    padding: 10px;
+    background: rgba(255, 215, 0, 0.2);
+    border-radius: 8px;
+    color: #FFD700;
+    font-weight: bold;
+    text-align: center;
+  }
+
+  /* 도구 잠금 해제 알림 */
+  .tool-unlock-notification {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.8);
+    background: rgba(0, 0, 0, 0.9);
+    backdrop-filter: blur(15px);
+    border: 2px solid rgba(255, 215, 0, 0.5);
+    border-radius: 20px;
+    padding: 30px;
+    text-align: center;
+    z-index: 10000;
+    opacity: 0;
+    transition: all 0.5s ease;
+    max-width: 400px;
+  }
+
+  .tool-unlock-notification.show {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+
+  .tool-unlock-notification .unlock-icon {
+    font-size: 60px;
+    margin-bottom: 15px;
+    animation: bounce 1s ease-in-out infinite;
+  }
+
+  @keyframes bounce {
+    0%, 20%, 53%, 80%, 100% {
+      transform: translateY(0);
+    }
+    40%, 43% {
+      transform: translateY(-20px);
+    }
+    70% {
+      transform: translateY(-10px);
+    }
+    90% {
+      transform: translateY(-5px);
+    }
+  }
+
+  .tool-unlock-notification .unlock-title {
+    font-size: 24px;
+    font-weight: bold;
+    color: #FFD700;
+    margin-bottom: 10px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+  }
+
+  .tool-unlock-notification .unlock-tools {
+    font-size: 20px;
+    color: #fff;
+    margin-bottom: 10px;
+    font-weight: 600;
+  }
+
+  .tool-unlock-notification .unlock-subtitle {
+    font-size: 16px;
+    color: rgba(255, 255, 255, 0.8);
   }
 `
   )

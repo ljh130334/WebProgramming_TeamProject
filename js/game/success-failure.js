@@ -1,7 +1,15 @@
-// 성공/실패 화면 로직 - 통합 디자인
 $(document).ready(function () {
   initResultScreens();
+  loadGameProgress();
 });
+
+// 게임 진행 상태 관리
+let gameProgress = {
+  unlockedStages: 1,
+  unlockedTools: ["Wok", "Knife"],
+  currentStage: 1,
+  maxStage: 3,
+};
 
 function initResultScreens() {
   // 화면 전환 이벤트 리스너
@@ -15,6 +23,61 @@ function initResultScreens() {
 }
 
 // ===========================================
+// 게임 진행 상태 관리
+// ===========================================
+
+function loadGameProgress() {
+  const saved = localStorage.getItem("gameProgress");
+  if (saved) {
+    gameProgress = { ...gameProgress, ...JSON.parse(saved) };
+  }
+  console.log("게임 진행 상태 로드:", gameProgress);
+}
+
+function saveGameProgress() {
+  localStorage.setItem("gameProgress", JSON.stringify(gameProgress));
+  console.log("게임 진행 상태 저장:", gameProgress);
+}
+
+function updateProgress(stageCleared) {
+  // 단계 클리어시 진행 상태 업데이트
+  if (stageCleared > gameProgress.unlockedStages) {
+    gameProgress.unlockedStages = Math.min(
+      stageCleared + 1,
+      gameProgress.maxStage
+    );
+
+    // 도구 잠금 해제
+    if (
+      stageCleared === 1 &&
+      !gameProgress.unlockedTools.includes("Gold Pan")
+    ) {
+      gameProgress.unlockedTools.push("Gold Pan");
+      console.log("황금 팬 잠금 해제!");
+    }
+    if (
+      stageCleared === 2 &&
+      !gameProgress.unlockedTools.includes("Gold Turner")
+    ) {
+      gameProgress.unlockedTools.push("Gold Turner");
+      console.log("황금 뒤집개 잠금 해제!");
+    }
+
+    saveGameProgress();
+  }
+}
+
+// 도구 잠금 상태 확인 (tools.js에서 사용)
+window.isToolUnlocked = function (toolName) {
+  return gameProgress.unlockedTools.includes(toolName);
+};
+
+// 현재 진행 상태 반환
+window.getGameProgress = function () {
+  return gameProgress;
+};
+
+// ===========================================
 // 성공 화면 처리
 // ===========================================
 
@@ -22,6 +85,7 @@ function handleSuccessScreen() {
   const recipeName = sessionStorage.getItem("completedRecipe") || "요리";
   const recipeEmoji = sessionStorage.getItem("recipeEmoji") || "🍽️";
   const difficulty = sessionStorage.getItem("gameDifficulty") || "Easy";
+  const currentStage = parseInt(sessionStorage.getItem("currentStage") || "1");
 
   const difficultyText = {
     Easy: "쉬움",
@@ -29,64 +93,115 @@ function handleSuccessScreen() {
     Hard: "어려움",
   };
 
+  // 진행 상태 업데이트
+  updateProgress(currentStage);
+
+  const isLastStage = currentStage >= gameProgress.maxStage;
+  const nextStage = currentStage + 1;
+
+  // 새로 해제된 도구 확인
+  const newlyUnlockedTools = [];
+  if (currentStage === 1 && gameProgress.unlockedTools.includes("Gold Pan")) {
+    newlyUnlockedTools.push("황금 팬");
+  }
+  if (
+    currentStage === 2 &&
+    gameProgress.unlockedTools.includes("Gold Turner")
+  ) {
+    newlyUnlockedTools.push("황금 뒤집개");
+  }
+
   // 성공 화면 HTML 동적 생성
   const successHtml = `
-      <div class="result-container success-container">
-        <!-- 배경 오버레이 -->
-        <div class="result-overlay"></div>
-        
-        <!-- 중앙 컨텐츠 -->
-        <div class="result-content">
-          <div class="result-icon success-icon">
-            <div class="icon-wrapper">
-              ${recipeEmoji}
+        <div class="result-container success-container">
+          <!-- 배경 오버레이 -->
+          <div class="result-overlay"></div>
+          
+          <!-- 중앙 컨텐츠 -->
+          <div class="result-content">
+            <div class="result-icon success-icon">
+              <div class="icon-wrapper">
+                ${recipeEmoji}
+              </div>
+            </div>
+            
+            <div class="result-title success-title">
+              ${currentStage}단계 ${recipeName} 완성!
+            </div>
+            
+            <div class="result-subtitle success-subtitle">
+              ${difficultyText[difficulty]} 난이도를 클리어했습니다!
+            </div>
+            
+            ${
+              newlyUnlockedTools.length > 0
+                ? `
+            <div class="unlock-notification">
+              🎉 새로운 도구 해제: ${newlyUnlockedTools.join(", ")}
+            </div>
+            `
+                : ""
+            }
+            
+            <div class="result-message">
+              맛있어요. 진짜 맛있어요.
+            </div>
+            
+            <div class="result-timer" id="success-timer">
+              <span>${
+                isLastStage
+                  ? "15초 뒤 메인 화면으로 돌아갑니다"
+                  : "15초 뒤 다음 단계로 이동합니다"
+              }</span>
+            </div>
+            
+            <div class="result-buttons">
+              ${
+                !isLastStage
+                  ? `
+              <button class="result-btn primary-btn" id="success-next-stage">
+                🚀 ${nextStage}단계로
+              </button>
+              `
+                  : ""
+              }
+              <button class="result-btn secondary-btn" id="success-tool-select">
+                🔧 도구 다시 고르기
+              </button>
+              <button class="result-btn secondary-btn" id="success-replay">
+                🔄 다시하기
+              </button>
+              <button class="result-btn tertiary-btn" id="success-home">
+                🏠 메인으로
+              </button>
             </div>
           </div>
           
-          <div class="result-title success-title">
-            ${recipeName} 완성!
-          </div>
-          
-          <div class="result-subtitle success-subtitle">
-            ${difficultyText[difficulty]} 난이도를 클리어했습니다!
-          </div>
-          
-          <div class="result-message">
-            맛있어요. 진짜 맛있어요.
-          </div>
-          
-          <div class="result-timer" id="success-timer">
-            <span>10초 뒤 메인 화면으로 돌아갑니다</span>
-          </div>
-          
-          <div class="result-buttons">
-            <button class="result-btn primary-btn" id="success-continue">
-              🏠 메인으로
-            </button>
-            <button class="result-btn secondary-btn" id="success-replay">
-              🔄 다시하기
-            </button>
+          <!-- 클릭 힌트 -->
+          <div class="click-hint">
+            화면을 클릭하면 빠르게 넘어갑니다
           </div>
         </div>
-        
-        <!-- 클릭 힌트 -->
-        <div class="click-hint">
-          화면을 클릭하면 빠르게 넘어갑니다
-        </div>
-      </div>
-    `;
+      `;
 
   $("#success").html(successHtml);
 
   // 타이머 시작
-  let countdown = 10;
+  let countdown = 15;
   const timer = setInterval(() => {
     countdown--;
-    $("#success-timer span").text(`${countdown}초 뒤 메인 화면으로 돌아갑니다`);
+    const action = isLastStage
+      ? "메인 화면으로 돌아갑니다"
+      : "다음 단계로 이동합니다";
+    $("#success-timer span").text(`${countdown}초 뒤 ${action}`);
 
     if (countdown <= 0) {
       clearInterval(timer);
-      goToMain();
+      if (isLastStage) {
+        goToMain();
+      } else {
+        goToNextStage();
+      }
     }
   }, 1000);
 
@@ -95,24 +210,40 @@ function handleSuccessScreen() {
     createSuccessParticles(recipeEmoji);
   }
 
-  // 버튼 이벤트
-  $("#success-continue").on("click", () => {
-    clearInterval(timer);
-    goToMain();
-  });
+  // 버튼 이벤트 (이벤트 위임 방식으로 변경)
+  $("#success")
+    .off("click")
+    .on("click", function (e) {
+      const target = e.target;
 
-  $("#success-replay").on("click", () => {
-    clearInterval(timer);
-    goToGame();
-  });
-
-  // 화면 클릭 이벤트
-  $("#success").on("click", (e) => {
-    if (e.target.id === "success" || $(e.target).hasClass("result-container")) {
-      clearInterval(timer);
-      goToMain();
-    }
-  });
+      if (target.id === "success-next-stage") {
+        e.stopPropagation();
+        clearInterval(timer);
+        goToNextStage();
+      } else if (target.id === "success-tool-select") {
+        e.stopPropagation();
+        clearInterval(timer);
+        goToToolSelect();
+      } else if (target.id === "success-replay") {
+        e.stopPropagation();
+        clearInterval(timer);
+        goToGame();
+      } else if (target.id === "success-home") {
+        e.stopPropagation();
+        clearInterval(timer);
+        goToMain();
+      } else if (
+        target.id === "success" ||
+        $(target).hasClass("result-container")
+      ) {
+        clearInterval(timer);
+        if (isLastStage) {
+          goToMain();
+        } else {
+          goToNextStage();
+        }
+      }
+    });
 }
 
 // ===========================================
@@ -123,6 +254,7 @@ function handleFailureScreen() {
   const recipeName = sessionStorage.getItem("completedRecipe") || "요리";
   const recipeEmoji = sessionStorage.getItem("recipeEmoji") || "🍽️";
   const difficulty = sessionStorage.getItem("gameDifficulty") || "Easy";
+  const currentStage = parseInt(sessionStorage.getItem("currentStage") || "1");
 
   const difficultyText = {
     Easy: "쉬움",
@@ -132,58 +264,61 @@ function handleFailureScreen() {
 
   // 실패 화면 HTML 동적 생성
   const failureHtml = `
-      <div class="result-container failure-container">
-        <!-- 배경 오버레이 -->
-        <div class="result-overlay failure-overlay"></div>
-        
-        <!-- 중앙 컨텐츠 -->
-        <div class="result-content">
-          <div class="result-icon failure-icon">
-            <div class="icon-wrapper">
-              😰
+        <div class="result-container failure-container">
+          <!-- 배경 오버레이 -->
+          <div class="result-overlay failure-overlay"></div>
+          
+          <!-- 중앙 컨텐츠 -->
+          <div class="result-content">
+            <div class="result-icon failure-icon">
+              <div class="icon-wrapper">
+                😰
+              </div>
+            </div>
+            
+            <div class="result-title failure-title">
+              ${currentStage}단계 ${recipeName} 만들기 실패!
+            </div>
+            
+            <div class="result-subtitle failure-subtitle">
+              ${difficultyText[difficulty]} 난이도에 다시 도전해보세요!
+            </div>
+            
+            <div class="result-message">
+              이븐하지 않잖아요!
+            </div>
+            
+            <div class="result-timer" id="failure-timer">
+              <span>15초 뒤 다시 도전할 수 있습니다</span>
+            </div>
+            
+            <div class="result-buttons">
+              <button class="result-btn primary-btn" id="failure-retry">
+                🔄 다시하기
+              </button>
+              <button class="result-btn secondary-btn" id="failure-tool-select">
+                🔧 도구 다시 고르기
+              </button>
+              <button class="result-btn secondary-btn" id="failure-difficulty">
+                ⚙️ 난이도 변경
+              </button>
+              <button class="result-btn tertiary-btn" id="failure-home">
+                🏠 메인으로
+              </button>
             </div>
           </div>
           
-          <div class="result-title failure-title">
-            ${recipeName} 만들기 실패!
-          </div>
-          
-          <div class="result-subtitle failure-subtitle">
-            ${difficultyText[difficulty]} 난이도에 다시 도전해보세요!
-          </div>
-          
-          <div class="result-message">
-            이븐하지 않잖아요!
-          </div>
-          
-          <div class="result-timer" id="failure-timer">
-            <span>10초 뒤 다시 도전할 수 있습니다</span>
-          </div>
-          
-          <div class="result-buttons">
-            <button class="result-btn primary-btn" id="failure-retry">
-              🔄 다시하기
-            </button>
-            <button class="result-btn secondary-btn" id="failure-difficulty">
-              ⚙️ 난이도 변경
-            </button>
-            <button class="result-btn tertiary-btn" id="failure-home">
-              🏠 메인으로
-            </button>
+          <!-- 클릭 힌트 -->
+          <div class="click-hint">
+            화면을 클릭하면 빠르게 넘어갑니다
           </div>
         </div>
-        
-        <!-- 클릭 힌트 -->
-        <div class="click-hint">
-          화면을 클릭하면 빠르게 넘어갑니다
-        </div>
-      </div>
-    `;
+      `;
 
   $("#failure").html(failureHtml);
 
   // 타이머 시작
-  let countdown = 10;
+  let countdown = 15;
   const timer = setInterval(() => {
     countdown--;
     $("#failure-timer span").text(`${countdown}초 뒤 다시 도전할 수 있습니다`);
@@ -199,31 +334,36 @@ function handleFailureScreen() {
     createFailureParticles();
   }
 
-  // 버튼 이벤트
-  $("#failure-retry").on("click", () => {
-    clearInterval(timer);
-    goToGame();
-  });
+  // 버튼 이벤트 (이벤트 위임 방식으로 변경)
+  $("#failure")
+    .off("click")
+    .on("click", function (e) {
+      const target = e.target;
 
-  $("#failure-difficulty").on("click", () => {
-    clearInterval(timer);
-    if (typeof switchToScreen === "function") {
-      switchToScreen("difficulty-select", 500);
-    }
-  });
-
-  $("#failure-home").on("click", () => {
-    clearInterval(timer);
-    goToMain();
-  });
-
-  // 화면 클릭 이벤트
-  $("#failure").on("click", (e) => {
-    if (e.target.id === "failure" || $(e.target).hasClass("result-container")) {
-      clearInterval(timer);
-      goToGame();
-    }
-  });
+      if (target.id === "failure-retry") {
+        e.stopPropagation();
+        clearInterval(timer);
+        goToGame();
+      } else if (target.id === "failure-tool-select") {
+        e.stopPropagation();
+        clearInterval(timer);
+        goToToolSelect();
+      } else if (target.id === "failure-difficulty") {
+        e.stopPropagation();
+        clearInterval(timer);
+        goToDifficultySelect();
+      } else if (target.id === "failure-home") {
+        e.stopPropagation();
+        clearInterval(timer);
+        goToMain();
+      } else if (
+        target.id === "failure" ||
+        $(target).hasClass("result-container")
+      ) {
+        clearInterval(timer);
+        goToGame();
+      }
+    });
 }
 
 // ===========================================
@@ -243,11 +383,38 @@ function goToGame() {
   }
 }
 
+function goToNextStage() {
+  const currentStage = parseInt(sessionStorage.getItem("currentStage") || "1");
+  const nextStage = currentStage + 1;
+
+  // 다음 단계 설정
+  sessionStorage.setItem("currentStage", nextStage.toString());
+
+  // 게임 화면으로 이동
+  if (typeof switchToScreen === "function") {
+    switchToScreen("game", 500);
+  }
+}
+
+function goToToolSelect() {
+  // 현재 단계 정보는 유지하고 도구 선택으로
+  if (typeof switchToScreen === "function") {
+    switchToScreen("tool-select", 500);
+  }
+}
+
+function goToDifficultySelect() {
+  if (typeof switchToScreen === "function") {
+    switchToScreen("difficulty-select", 500);
+  }
+}
+
 function clearSessionData() {
   sessionStorage.removeItem("completedRecipe");
   sessionStorage.removeItem("recipeEmoji");
   sessionStorage.removeItem("gameDifficulty");
   sessionStorage.removeItem("gameResult");
+  sessionStorage.removeItem("currentStage");
 }
 
 // ===========================================

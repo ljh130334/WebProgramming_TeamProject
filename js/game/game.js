@@ -1,4 +1,3 @@
-// 게임 메인 로직 - 난이도별 요리 시스템
 $(document).ready(function () {
   initGameSystem();
 });
@@ -17,6 +16,7 @@ let game = {
   selectedSide: null,
   selectedTool: null,
   selectedDifficulty: null,
+  currentStage: 1,
 
   // 게임 오브젝트
   paddle: { x: 250, y: 470, width: 100, height: 15 },
@@ -44,28 +44,76 @@ const BLOCKS = {
   BOMB: { color: "#F44336", points: 20 },
 };
 
-// 난이도별 요리 시스템
-const DIFFICULTY_RECIPES = {
-  Easy: {
-    name: "햄버거",
-    emoji: "🍔",
-    ingredients: ["🍞", "🥩", "🧀", "🥬", "🍅"],
-    time: 90,
-    description: "간단하고 맛있는 햄버거 만들기",
+// 단계별 요리 시스템 (3단계)
+const STAGE_RECIPES = {
+  1: {
+    Easy: {
+      name: "햄버거",
+      emoji: "🍔",
+      ingredients: ["🍞", "🥩", "🧀", "🥬", "🍅"],
+      time: 90,
+      description: "간단하고 맛있는 햄버거 만들기",
+    },
+    Normal: {
+      name: "피자",
+      emoji: "🍕",
+      ingredients: ["🫓", "🧀", "🍅", "🫒", "🌶️", "🧅"],
+      time: 75,
+      description: "정통 이탈리안 피자 만들기",
+    },
+    Hard: {
+      name: "비빔밥",
+      emoji: "🍚",
+      ingredients: ["🍚", "🥕", "🥬", "🥩", "🥒", "🍄", "🥚"],
+      time: 60,
+      description: "한국 전통 비빔밥 만들기",
+    },
   },
-  Normal: {
-    name: "피자",
-    emoji: "🍕",
-    ingredients: ["🫓", "🧀", "🍅", "🫒", "🌶️", "🧅", "🍄"],
-    time: 75,
-    description: "정통 이탈리안 피자 만들기",
+  2: {
+    Easy: {
+      name: "스파게티",
+      emoji: "🍝",
+      ingredients: ["🍝", "🍅", "🧄", "🧅", "🧀", "🌿"],
+      time: 85,
+      description: "이탈리아 전통 스파게티",
+    },
+    Normal: {
+      name: "스테이크",
+      emoji: "🥩",
+      ingredients: ["🥩", "🧈", "🧄", "🌿", "🧂", "🍄", "🥔"],
+      time: 70,
+      description: "완벽한 스테이크 요리",
+    },
+    Hard: {
+      name: "초밥",
+      emoji: "🍣",
+      ingredients: ["🍚", "🐟", "🦐", "🥒", "🥑", "🍋", "🌊", "🍃"],
+      time: 55,
+      description: "정교한 일본 초밥 만들기",
+    },
   },
-  Hard: {
-    name: "비빔밥",
-    emoji: "🍚",
-    ingredients: ["🍚", "🥕", "🥬", "🥩", "🥒", "🍄", "🥚", "🌶️", "🧄"],
-    time: 60,
-    description: "한국 전통 비빔밥 만들기",
+  3: {
+    Easy: {
+      name: "타코",
+      emoji: "🌮",
+      ingredients: ["🌮", "🥩", "🧀", "🥬", "🍅", "🌶️", "🧅"],
+      time: 80,
+      description: "멕시코 전통 타코",
+    },
+    Normal: {
+      name: "라멘",
+      emoji: "🍜",
+      ingredients: ["🍜", "🥩", "🥚", "🧅", "🌿", "🌶️", "🧄", "🍄"],
+      time: 65,
+      description: "진짜 일본 라멘",
+    },
+    Hard: {
+      name: "프렌치 코스",
+      emoji: "🥘",
+      ingredients: ["🦆", "🧈", "🍷", "🌿", "🧄", "🍄", "🥕", "🧅", "🍋"],
+      time: 50,
+      description: "고급 프렌치 코스 요리",
+    },
   },
 };
 
@@ -95,6 +143,9 @@ function startGame() {
   game.selectedTool = sessionStorage.getItem("selectedTool") || "Wok";
   game.selectedDifficulty =
     sessionStorage.getItem("selectedDifficulty") || "Easy";
+  game.currentStage = parseInt(sessionStorage.getItem("currentStage") || "1");
+
+  console.log("현재 단계:", game.currentStage);
 
   // 1초 후 게임 초기화 (로딩 효과)
   setTimeout(() => {
@@ -127,11 +178,27 @@ function startGame() {
 }
 
 function resetGame() {
-  // 현재 난이도의 요리 정보 가져오기
-  const currentRecipe = DIFFICULTY_RECIPES[game.selectedDifficulty];
+  // 현재 단계와 난이도의 요리 정보 가져오기
+  const currentRecipe =
+    STAGE_RECIPES[game.currentStage]?.[game.selectedDifficulty];
 
-  // 시간 설정
-  game.timeLeft = currentRecipe.time;
+  if (!currentRecipe) {
+    console.error(
+      "유효하지 않은 단계/난이도:",
+      game.currentStage,
+      game.selectedDifficulty
+    );
+    return;
+  }
+
+  // 단계 정보 저장
+  sessionStorage.setItem("currentStage", game.currentStage.toString());
+  sessionStorage.setItem("completedRecipe", currentRecipe.name);
+  sessionStorage.setItem("recipeEmoji", currentRecipe.emoji);
+
+  // 시간 설정 (단계가 높아질수록 더 어려워짐)
+  const stageTimeReduction = (game.currentStage - 1) * 5;
+  game.timeLeft = Math.max(currentRecipe.time - stageTimeReduction, 30);
 
   // 재료 설정
   game.requiredIngredients = [...currentRecipe.ingredients];
@@ -139,7 +206,17 @@ function resetGame() {
   game.michelinStars = 0;
   game.score = 0;
 
-  // 패들 위치 초기화
+  // 패들 위치 초기화 (선택된 도구에 따라 크기 조정)
+  const toolSizes = {
+    Wok: { width: 100, height: 15 },
+    Knife: { width: 80, height: 12 },
+    "Gold Pan": { width: 120, height: 18 },
+    "Gold Turner": { width: 90, height: 15 },
+  };
+
+  const toolSize = toolSizes[game.selectedTool] || toolSizes["Wok"];
+  game.paddle.width = toolSize.width;
+  game.paddle.height = toolSize.height;
   game.paddle.x = game.canvas.width / 2 - game.paddle.width / 2;
   game.paddle.y = game.canvas.height - 30;
 
@@ -160,17 +237,21 @@ function resetGame() {
 }
 
 function updateRecipeDisplay() {
-  const currentRecipe = DIFFICULTY_RECIPES[game.selectedDifficulty];
+  const currentRecipe =
+    STAGE_RECIPES[game.currentStage]?.[game.selectedDifficulty];
 
-  // 레벨 표시 업데이트 (난이도 정보 포함)
+  if (!currentRecipe) return;
+
+  // 난이도 표시 텍스트
   const difficultyText = {
     Easy: "쉬움",
     Normal: "보통",
     Hard: "어려움",
   };
 
+  // 레벨 표시 업데이트 (단계 정보 포함)
   $(".level-display").html(
-    `${currentRecipe.emoji} ${currentRecipe.name} (${
+    `${game.currentStage}단계 - ${currentRecipe.emoji} ${currentRecipe.name} (${
       difficultyText[game.selectedDifficulty]
     })`
   );
@@ -180,7 +261,7 @@ function updateRecipeDisplay() {
     .parent()
     .find("h3")
     .first()
-    .html(`🎯 ${currentRecipe.name} 재료`);
+    .html(`🎯 ${game.currentStage}단계 ${currentRecipe.name} 재료`);
 }
 
 // ===========================================
@@ -189,20 +270,37 @@ function updateRecipeDisplay() {
 
 function generateBlocks() {
   game.blocks = [];
-  const currentRecipe = DIFFICULTY_RECIPES[game.selectedDifficulty];
+  const currentRecipe =
+    STAGE_RECIPES[game.currentStage]?.[game.selectedDifficulty];
 
-  // 현재 요리의 재료들과 추가 재료들
-  const extraIngredients = ["🥓", "🥖", "🌮", "🥙", "🌭", "🍖", "🧈", "🥝"];
+  if (!currentRecipe) return;
+
+  // 단계별 추가 재료 (더 다양해짐)
+  const extraIngredientSets = {
+    1: ["🥓", "🥖", "🌮", "🥙", "🌭", "🍖"],
+    2: ["🦐", "🐟", "🦀", "🍷", "🍺", "🥜"],
+    3: ["🦆", "🦌", "🍾", "🧈", "🧂", "🌿", "🍯", "🫐"],
+  };
+
+  const extraIngredients =
+    extraIngredientSets[game.currentStage] || extraIngredientSets[1];
   const allIngredients = [...currentRecipe.ingredients, ...extraIngredients];
 
-  for (let row = 0; row < 3; row++) {
-    for (let col = 0; col < 8; col++) {
+  // 단계가 높을수록 더 많은 블록 생성
+  const rowCount = Math.min(3 + Math.floor(game.currentStage / 2), 5);
+  const colCount = 8;
+
+  for (let row = 0; row < rowCount; row++) {
+    for (let col = 0; col < colCount; col++) {
       const x = col * 75 + 10;
       const y = row * 30 + 50;
 
       const rand = Math.random();
       let type,
         content = "";
+
+      // 단계가 높을수록 미슐랭 스타와 폭탄이 더 자주 등장
+      const stageMultiplier = game.currentStage * 0.1;
 
       if (rand < 0.5) {
         // 재료 블록 (필요한 재료가 더 자주 나오도록)
@@ -218,9 +316,9 @@ function generateBlocks() {
           content =
             allIngredients[Math.floor(Math.random() * allIngredients.length)];
         }
-      } else if (rand < 0.75) {
+      } else if (rand < 0.7 + stageMultiplier) {
         type = "NORMAL";
-      } else if (rand < 0.9) {
+      } else if (rand < 0.85 + stageMultiplier) {
         type = "MICHELIN";
         content = "⭐";
       } else {
@@ -258,8 +356,18 @@ function moveBlocksDown() {
 }
 
 function addNewBlocks() {
-  const currentRecipe = DIFFICULTY_RECIPES[game.selectedDifficulty];
-  const extraIngredients = ["🥓", "🥖", "🌮", "🥙", "🌭", "🍖", "🧈", "🥝"];
+  const currentRecipe =
+    STAGE_RECIPES[game.currentStage]?.[game.selectedDifficulty];
+  if (!currentRecipe) return;
+
+  const extraIngredientSets = {
+    1: ["🥓", "🥖", "🌮", "🥙", "🌭", "🍖"],
+    2: ["🦐", "🐟", "🦀", "🍷", "🍺", "🥜"],
+    3: ["🦆", "🦌", "🍾", "🧈", "🧂", "🌿", "🍯", "🫐"],
+  };
+
+  const extraIngredients =
+    extraIngredientSets[game.currentStage] || extraIngredientSets[1];
   const allIngredients = [...currentRecipe.ingredients, ...extraIngredients];
 
   for (let col = 0; col < 8; col++) {
@@ -268,6 +376,8 @@ function addNewBlocks() {
       const rand = Math.random();
       let type,
         content = "";
+
+      const stageMultiplier = game.currentStage * 0.1;
 
       if (rand < 0.6) {
         type = "INGREDIENT";
@@ -281,7 +391,7 @@ function addNewBlocks() {
           content =
             allIngredients[Math.floor(Math.random() * allIngredients.length)];
         }
-      } else if (rand < 0.85) {
+      } else if (rand < 0.8 + stageMultiplier) {
         type = "NORMAL";
       } else {
         type = "MICHELIN";
@@ -341,6 +451,13 @@ function updateGame() {
       const paddleCenter = game.paddle.x + game.paddle.width / 2;
       const hitPos = (ball.x - paddleCenter) / (game.paddle.width / 2);
       ball.dx = hitPos * 3;
+
+      // 선택된 도구에 따른 특수 효과
+      if (game.selectedTool === "Gold Turner") {
+        // 황금 뒤집개: 공 속도 증가
+        ball.dx *= 1.2;
+        ball.dy *= 1.1;
+      }
     }
 
     // 아래로 떨어짐
@@ -397,7 +514,20 @@ function checkBlockCollisions() {
 }
 
 function handleBlockHit(block) {
-  game.score += BLOCKS[block.type]?.points || 5;
+  let basePoints = BLOCKS[block.type]?.points || 5;
+
+  // 단계별 점수 보너스
+  const stageBonus = game.currentStage * 5;
+
+  // 선택된 도구에 따른 점수 보너스
+  let toolBonus = 1;
+  if (game.selectedTool === "Gold Pan") {
+    toolBonus = 1.5; // 황금 팬: 1.5배 점수
+  } else if (game.selectedTool === "Gold Turner") {
+    toolBonus = 2; // 황금 뒤집개: 2배 점수
+  }
+
+  game.score += Math.floor((basePoints + stageBonus) * toolBonus);
 
   switch (block.type) {
     case "INGREDIENT":
@@ -406,6 +536,11 @@ function handleBlockHit(block) {
         game.requiredIngredients.splice(index, 1);
         game.collectedIngredients.push(block.content);
         updateIngredientsDisplay();
+
+        // 황금 뒤집개 특수 능력: 자동 콤보
+        if (game.selectedTool === "Gold Turner") {
+          createComboEffect();
+        }
       }
       break;
 
@@ -432,20 +567,33 @@ function handleBlockHit(block) {
       break;
 
     case "BOMB":
-      // 주변 블록 파괴
+      // 주변 블록 파괴 (단계가 높을수록 더 넓은 범위)
+      const explosionRange = 80 + game.currentStage * 20;
       game.blocks.forEach((otherBlock) => {
         const distance = Math.sqrt(
           Math.pow(block.x - otherBlock.x, 2) +
             Math.pow(block.y - otherBlock.y, 2)
         );
-        if (distance < 100 && !otherBlock.destroyed) {
+        if (distance < explosionRange && !otherBlock.destroyed) {
           otherBlock.destroyed = true;
+          // 폭탄으로 파괴된 블록도 점수 획득
+          game.score += Math.floor(5 * toolBonus);
         }
       });
       break;
   }
 
   updateGameInfo();
+}
+
+// 콤보 효과 표시
+function createComboEffect() {
+  const $combo = $('<div class="combo-effect">COMBO!</div>');
+  $("#game-canvas").parent().append($combo);
+
+  setTimeout(() => {
+    $combo.remove();
+  }, 2000);
 }
 
 // ===========================================
@@ -455,33 +603,43 @@ function handleBlockHit(block) {
 function drawGame() {
   const ctx = game.ctx;
 
-  // 배경 그라디언트 (Canvas API 방식)
+  // 배경 그라디언트 (단계별 색상 변화)
   const gradient = ctx.createLinearGradient(0, 0, 0, game.canvas.height);
-  gradient.addColorStop(0, "#1a1a2e");
-  gradient.addColorStop(1, "#16213e");
+  const stageColors = {
+    1: { start: "#1a1a2e", end: "#16213e" },
+    2: { start: "#2e1a1a", end: "#3e1621" },
+    3: { start: "#1a2e1a", end: "#162138" },
+  };
+
+  const colors = stageColors[game.currentStage] || stageColors[1];
+  gradient.addColorStop(0, colors.start);
+  gradient.addColorStop(1, colors.end);
   ctx.fillStyle = gradient;
   ctx.fillRect(0, 0, game.canvas.width, game.canvas.height);
 
   // 요리 표시 (캔버스 상단)
-  const currentRecipe = DIFFICULTY_RECIPES[game.selectedDifficulty];
-  ctx.font = "bold 24px Arial";
-  ctx.fillStyle = "#fff";
-  ctx.textAlign = "center";
-  ctx.textBaseline = "top";
-  ctx.fillText(
-    `${currentRecipe.emoji} ${currentRecipe.name} 만들기`,
-    game.canvas.width / 2,
-    10
-  );
+  const currentRecipe =
+    STAGE_RECIPES[game.currentStage]?.[game.selectedDifficulty];
+  if (currentRecipe) {
+    ctx.font = "bold 20px Arial";
+    ctx.fillStyle = "#fff";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "top";
+    ctx.fillText(
+      `${game.currentStage}단계: ${currentRecipe.emoji} ${currentRecipe.name} 만들기`,
+      game.canvas.width / 2,
+      10
+    );
 
-  // 재료 개수 표시
-  ctx.font = "16px Arial";
-  ctx.fillStyle = "#FFD700";
-  ctx.fillText(
-    `남은 재료: ${game.requiredIngredients.length}/${currentRecipe.ingredients.length}`,
-    game.canvas.width / 2,
-    40
-  );
+    // 재료 개수 표시
+    ctx.font = "16px Arial";
+    ctx.fillStyle = "#FFD700";
+    ctx.fillText(
+      `남은 재료: ${game.requiredIngredients.length}/${currentRecipe.ingredients.length}`,
+      game.canvas.width / 2,
+      35
+    );
+  }
 
   // 블록
   game.blocks.forEach((block) => {
@@ -522,7 +680,7 @@ function drawGame() {
     ctx.arc(ball.x + 2, ball.y + 2, ball.radius, 0, Math.PI * 2);
     ctx.fill();
 
-    // 공 메인
+    // 공 메인 (도구별 색상)
     const ballGradient = ctx.createRadialGradient(
       ball.x - ball.radius / 3,
       ball.y - ball.radius / 3,
@@ -531,8 +689,18 @@ function drawGame() {
       ball.y,
       ball.radius
     );
-    ballGradient.addColorStop(0, "#ff8c5a");
-    ballGradient.addColorStop(1, "#ff6b35");
+
+    // 선택된 도구에 따른 공 색상
+    const toolColors = {
+      Wok: { start: "#ff8c5a", end: "#ff6b35" },
+      Knife: { start: "#c0c0c0", end: "#a0a0a0" },
+      "Gold Pan": { start: "#ffd700", end: "#ffb300" },
+      "Gold Turner": { start: "#ffd700", end: "#ff8c00" },
+    };
+
+    const colors = toolColors[game.selectedTool] || toolColors["Wok"];
+    ballGradient.addColorStop(0, colors.start);
+    ballGradient.addColorStop(1, colors.end);
 
     ctx.fillStyle = ballGradient;
     ctx.beginPath();
@@ -559,15 +727,24 @@ function drawGame() {
   ctx.fillStyle = "rgba(0, 0, 0, 0.3)";
   ctx.fillRect(paddle.x + 2, paddle.y + 2, paddle.width, paddle.height);
 
-  // 패들 메인
+  // 패들 메인 (선택된 도구에 따른 색상)
   const paddleGradient = ctx.createLinearGradient(
     0,
     paddle.y,
     0,
     paddle.y + paddle.height
   );
-  paddleGradient.addColorStop(0, "#4CAF50");
-  paddleGradient.addColorStop(1, "#2E7D32");
+
+  const paddleColors = {
+    Wok: { start: "#FF9800", end: "#E65100" },
+    Knife: { start: "#CFD8DC", end: "#90A4AE" },
+    "Gold Pan": { start: "#FFD700", end: "#FFA000" },
+    "Gold Turner": { start: "#FFD700", end: "#FF8F00" },
+  };
+
+  const pColors = paddleColors[game.selectedTool] || paddleColors["Wok"];
+  paddleGradient.addColorStop(0, pColors.start);
+  paddleGradient.addColorStop(1, pColors.end);
 
   ctx.fillStyle = paddleGradient;
   ctx.fillRect(paddle.x, paddle.y, paddle.width, paddle.height);
@@ -705,10 +882,14 @@ function endGame(success, goHome = false) {
   }
 
   // 결과 정보 저장
-  const currentRecipe = DIFFICULTY_RECIPES[game.selectedDifficulty];
-  sessionStorage.setItem("completedRecipe", currentRecipe.name);
-  sessionStorage.setItem("recipeEmoji", currentRecipe.emoji);
+  const currentRecipe =
+    STAGE_RECIPES[game.currentStage]?.[game.selectedDifficulty];
+  if (currentRecipe) {
+    sessionStorage.setItem("completedRecipe", currentRecipe.name);
+    sessionStorage.setItem("recipeEmoji", currentRecipe.emoji);
+  }
   sessionStorage.setItem("gameDifficulty", game.selectedDifficulty);
+  sessionStorage.setItem("currentStage", game.currentStage.toString());
 
   if (success) {
     sessionStorage.setItem("gameResult", "success");
