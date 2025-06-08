@@ -18,17 +18,14 @@ function initSettingsSystem() {
   // 옵션 버튼 클릭
   $optionsBtn.on("click", function () {
     if ($settingsPanel.is(":visible")) {
-      console.log("설정 패널 숨기기");
       hideSettings();
     } else {
-      console.log("설정 패널 보이기");
       showSettings();
     }
   });
 
   // 설정 닫기 버튼
   $settingsClose.on("click", function () {
-    console.log("닫기 버튼 클릭됨!");
     hideSettings();
   });
 
@@ -102,12 +99,10 @@ function initSettingsSystem() {
 }
 
 function showSettings() {
-  console.log("showSettings 함수 실행");
   $("#settings-panel").slideDown(300);
 }
 
 function hideSettings() {
-  console.log("hideSettings 함수 실행");
   $("#settings-panel").slideUp(300);
   $("#options-btn").html("⚙️ 옵션 ⚙️");
 }
