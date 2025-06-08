@@ -3,7 +3,6 @@ $(document).ready(function () {
 });
 
 function initToolSelectScreen() {
-  // 화면 표시 시 초기화
   $(document).on("screen-changed", function (e, screenId) {
     if (screenId === "tool-select") {
       updateToolAvailability();
@@ -11,7 +10,6 @@ function initToolSelectScreen() {
     }
   });
 
-  // 도구 클릭 이벤트
   $(document)
     .off("click", ".tool-wrapper")
     .on("click", ".tool-wrapper", function (e) {
@@ -27,7 +25,6 @@ function initToolSelectScreen() {
       handleToolSelection($tool, toolName);
     });
 
-  // 도구 호버 효과
   $(document).on("mouseenter", ".tool-wrapper", function () {
     const $tool = $(this).find(".tool");
 
@@ -47,29 +44,38 @@ function initToolSelectScreen() {
   });
 }
 
-// ===========================================
-// 도구 가용성 업데이트
-// ===========================================
-
 function updateToolAvailability() {
   const gameProgress =
     typeof window.getGameProgress === "function"
       ? window.getGameProgress()
       : { unlockedTools: ["Wok", "Knife"] };
 
-  console.log("도구 가용성 업데이트:", gameProgress);
+  const lastCompletedStage = parseInt(
+    localStorage.getItem("lastCompletedStage") || "0"
+  );
 
-  // 모든 도구 상태 업데이트
+  if (
+    lastCompletedStage >= 1 &&
+    !gameProgress.unlockedTools.includes("Gold Pan")
+  ) {
+    gameProgress.unlockedTools.push("Gold Pan");
+  }
+
+  if (
+    lastCompletedStage >= 2 &&
+    !gameProgress.unlockedTools.includes("Gold Turner")
+  ) {
+    gameProgress.unlockedTools.push("Gold Turner");
+  }
+
   $(".tool").each(function () {
     const toolName = $(this).data("tool");
     const $toolWrapper = $(this).closest(".tool-wrapper");
 
     if (gameProgress.unlockedTools.includes(toolName)) {
-      // 잠금 해제된 도구
       $(this).removeClass("disabled");
       updateToolImage($(this), toolName, false);
 
-      // 새로 해제된 도구 강조 효과
       if (toolName === "Gold Pan" || toolName === "Gold Turner") {
         $toolWrapper.addClass("newly-unlocked");
         setTimeout(() => {
@@ -77,13 +83,11 @@ function updateToolAvailability() {
         }, 3000);
       }
     } else {
-      // 잠금된 도구
       $(this).addClass("disabled");
       updateToolImage($(this), toolName, true);
     }
   });
 
-  // 잠금 해제 알림 표시
   showUnlockNotifications(gameProgress);
 }
 
@@ -109,7 +113,6 @@ function updateToolImage($tool, toolName, isLocked) {
 }
 
 function showUnlockNotifications(gameProgress) {
-  // 새로 해제된 도구가 있는지 확인
   const newlyUnlocked = [];
 
   if (
@@ -133,12 +136,7 @@ function showUnlockNotifications(gameProgress) {
   }
 }
 
-// ===========================================
-// 도구 선택 화면 애니메이션
-// ===========================================
-
 function startToolSelectAnimations() {
-  // 도구들 순차 등장
   animateToolsEntry();
 }
 
@@ -163,34 +161,22 @@ function animateToolsEntry() {
   });
 }
 
-// ===========================================
-// 도구 선택 처리
-// ===========================================
-
 function handleToolSelection(selectedTool, toolName) {
-  console.log("도구 선택:", toolName);
-
-  // 다른 도구들 비활성화
   $(".tool").not(selectedTool).addClass("selecting");
 
-  // 선택된 도구 강조
   selectedTool.addClass("selected");
 
-  // 선택 파티클 효과
   if (!window.particlesDisabled) {
     createToolSelectionParticles(selectedTool);
   }
 
-  // 선택 데이터 저장
   if (window.gameData) {
     window.gameData.selectedTool = toolName;
   }
-  sessionStorage.setItem("selectedTool", toolName);
+  localStorage.setItem("selectedTool", toolName);
 
-  // 성공 메시지 표시
   showToolSelectionMessage(toolName);
 
-  // 다음 화면으로 전환 (2초 후)
   setTimeout(() => {
     if (typeof switchToScreen === "function") {
       switchToScreen("difficulty-select", 500);
@@ -198,22 +184,18 @@ function handleToolSelection(selectedTool, toolName) {
   }, 2000);
 }
 
-// 비활성화된 도구 클릭 처리
 function handleDisabledToolClick($tool) {
   const toolName = $tool.data("tool");
 
-  // 흔들기 애니메이션
   $tool.addClass("shake");
   setTimeout(() => {
     $tool.removeClass("shake");
   }, 600);
 
-  // 잠금 파티클 효과
   if (!window.particlesDisabled) {
     createLockParticles($tool);
   }
 
-  // 단계별 잠금 해제 조건 메시지
   let unlockMessage = "이 도구는 아직 잠겨있습니다! 🔒";
   if (toolName === "Gold Pan") {
     unlockMessage = "1단계를 클리어하면 황금 팬이 해제됩니다! 🔒";
@@ -223,10 +205,6 @@ function handleDisabledToolClick($tool) {
 
   showNotification(unlockMessage);
 }
-
-// ===========================================
-// 도구 설명 시스템
-// ===========================================
 
 const toolDescriptions = {
   Wok: {
@@ -300,11 +278,6 @@ function hideToolDescription() {
   $("#tool-description").removeClass("show locked");
 }
 
-// ===========================================
-// 파티클 효과
-// ===========================================
-
-// 도구 호버 파티클 효과
 function createToolHoverEffect($tool) {
   const rect = $tool[0].getBoundingClientRect();
   const centerX = rect.left + rect.width / 2;
@@ -335,13 +308,11 @@ function createToolHoverEffect($tool) {
   }
 }
 
-// 도구 선택 시 파티클 효과
 function createToolSelectionParticles($tool) {
   const rect = $tool[0].getBoundingClientRect();
   const centerX = rect.left + rect.width / 2;
   const centerY = rect.top + rect.height / 2;
 
-  // 폭발 효과
   for (let i = 0; i < 25; i++) {
     const angle = (i / 25) * Math.PI * 2;
     const distance = 60 + Math.random() * 80;
@@ -379,7 +350,6 @@ function createToolSelectionParticles($tool) {
     }, 100);
   }
 
-  // 중앙 폭발 효과
   const $centerExplosion = $('<div class="tool-center-explosion"></div>');
   $centerExplosion.css({
     position: "fixed",
@@ -403,7 +373,6 @@ function createToolSelectionParticles($tool) {
   }, 1500);
 }
 
-// 잠금 파티클 효과
 function createLockParticles($tool) {
   const rect = $tool[0].getBoundingClientRect();
   const centerX = rect.left + rect.width / 2;
@@ -437,11 +406,6 @@ function createLockParticles($tool) {
   }
 }
 
-// ===========================================
-// 유틸리티 함수들
-// ===========================================
-
-// 도구별 색상 반환
 function getToolColor(toolName) {
   const colors = {
     Wok: "#FFA500",
@@ -452,7 +416,6 @@ function getToolColor(toolName) {
   return colors[toolName] || "#ff6b35";
 }
 
-// 도구 선택 성공 메시지
 function showToolSelectionMessage(toolName) {
   const description = toolDescriptions[toolName];
 
@@ -472,7 +435,6 @@ function showToolSelectionMessage(toolName) {
   }, 1500);
 }
 
-// 도구 잠금 해제 알림
 function showToolUnlockNotification(unlockedTools) {
   const $notification = $('<div class="tool-unlock-notification"></div>');
   $notification.html(`
@@ -484,12 +446,10 @@ function showToolUnlockNotification(unlockedTools) {
 
   $("body").append($notification);
 
-  // 등장 애니메이션
   setTimeout(() => {
     $notification.addClass("show");
   }, 100);
 
-  // 5초 후 제거
   setTimeout(() => {
     $notification.removeClass("show");
     setTimeout(() => {
@@ -498,7 +458,6 @@ function showToolUnlockNotification(unlockedTools) {
   }, 5000);
 }
 
-// 알림 표시 함수
 function showNotification(message) {
   const $notification = $('<div class="settings-notification"></div>');
   $notification.text(message);
@@ -516,10 +475,6 @@ function showNotification(message) {
     }, 300);
   }, 3000);
 }
-
-// ===========================================
-// CSS 애니메이션 추가
-// ===========================================
 
 $("<style>")
   .text(
@@ -550,24 +505,6 @@ $("<style>")
     }
   }
 
-  @keyframes toolFloatUp {
-    0% {
-      transform: translateY(0px) rotate(0deg);
-      opacity: 0;
-    }
-    10% {
-      opacity: 0.4;
-    }
-    90% {
-      opacity: 0.4;
-    }
-    100% {
-      transform: translateY(-100vh) rotate(180deg);
-      opacity: 0;
-    }
-  }
-
-  /* 새로 해제된 도구 강조 */
   .tool-wrapper.newly-unlocked {
     animation: newlyUnlockedGlow 3s ease-in-out;
   }
@@ -581,7 +518,6 @@ $("<style>")
     }
   }
 
-  /* 도구 설명 패널 잠금 상태 */
   .tool-description.locked {
     border-color: rgba(255, 0, 0, 0.3);
     background: rgba(255, 0, 0, 0.1);
@@ -604,7 +540,6 @@ $("<style>")
     text-align: center;
   }
 
-  /* 도구 잠금 해제 알림 */
   .tool-unlock-notification {
     position: fixed;
     top: 50%;
@@ -671,25 +606,18 @@ $("<style>")
   )
   .appendTo("head");
 
-// ===========================================
-// 화면 전환 이벤트 처리
-// ===========================================
-
 $(document).on("screen-changed", function (e, screenId) {
   if (screenId === "tool-select") {
-    // 도구 선택 화면 진입 효과
     setTimeout(() => {
       if (!window.particlesDisabled) {
         createToolScreenEntrance();
       }
     }, 500);
   } else {
-    // 도구 선택 화면 전용 파티클 정리
     $(".tool-exclusive").remove();
   }
 });
 
-// 도구 선택 화면 진입 시 환영 효과
 function createToolScreenEntrance() {
   const centerX = window.innerWidth / 2;
   const centerY = window.innerHeight / 2;
