@@ -11,7 +11,7 @@ function initToolSelectScreen() {
     }
   });
 
-  // 도구 클릭 이벤트 (이벤트 위임 방식으로 변경)
+  // 도구 클릭 이벤트
   $(document)
     .off("click", ".tool-wrapper")
     .on("click", ".tool-wrapper", function (e) {
@@ -179,11 +179,6 @@ function handleToolSelection(selectedTool, toolName) {
   // 선택 파티클 효과
   if (!window.particlesDisabled) {
     createToolSelectionParticles(selectedTool);
-  }
-
-  // 효과음 재생
-  if (typeof getSfxVolume === "function") {
-    console.log("도구 선택 효과음 재생 - 볼륨:", getSfxVolume());
   }
 
   // 선택 데이터 저장

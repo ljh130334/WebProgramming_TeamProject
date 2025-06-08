@@ -1,4 +1,3 @@
-// 메인 화면 전용 애니메이션 효과들
 $(document).ready(function () {
   // 페이지 로드 시 메인 화면 애니메이션 시작
   initMainAnimations();
@@ -117,31 +116,7 @@ function createFallingIngredients() {
   }, 1500);
 }
 
-// 3. 셰프 모자 생성 (메인 화면 전용)
-function createChefHats() {
-  const chefEmojis = ["👨‍🍳", "👩‍🍳", "🧑‍🍳"];
-
-  setInterval(() => {
-    if ($("#main").is(":visible") && !window.particlesDisabled) {
-      const emoji = chefEmojis[Math.floor(Math.random() * chefEmojis.length)];
-      const $chefHat = $('<div class="chef-hat"></div>');
-      $chefHat.text(emoji);
-      $chefHat.css({
-        left: Math.random() * 100 + "%",
-        top: Math.random() * 100 + "%",
-        animationDelay: Math.random() * 2 + "s",
-      });
-
-      $("#main").append($chefHat);
-
-      setTimeout(() => {
-        $chefHat.remove();
-      }, 8000);
-    }
-  }, 5000);
-}
-
-// 4. 메인 화면 전용 버튼 효과
+// 3. 메인 화면 전용 버튼 효과
 function addMainButtonEffects() {
   // 게임시작 버튼 호버 효과
   $("#start-game-btn").hover(
@@ -197,7 +172,7 @@ function createMainEnhancedFireParticles() {
         }, 4000);
       }
     }
-  }, 200); // 더 자주 생성
+  }, 200);
 }
 
 // 메인 화면 진입 시 특별한 시작 효과

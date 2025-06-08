@@ -176,11 +176,6 @@ function handleSuccessScreen() {
               </button>
             </div>
           </div>
-          
-          <!-- 클릭 힌트 -->
-          <div class="click-hint">
-            화면을 클릭하면 빠르게 넘어갑니다
-          </div>
         </div>
       `;
 
@@ -210,7 +205,7 @@ function handleSuccessScreen() {
     createSuccessParticles(recipeEmoji);
   }
 
-  // 버튼 이벤트 (이벤트 위임 방식으로 변경)
+  // 버튼 이벤트
   $("#success")
     .off("click")
     .on("click", function (e) {
@@ -307,11 +302,6 @@ function handleFailureScreen() {
               </button>
             </div>
           </div>
-          
-          <!-- 클릭 힌트 -->
-          <div class="click-hint">
-            화면을 클릭하면 빠르게 넘어갑니다
-          </div>
         </div>
       `;
 
@@ -334,7 +324,7 @@ function handleFailureScreen() {
     createFailureParticles();
   }
 
-  // 버튼 이벤트 (이벤트 위임 방식으로 변경)
+  // 버튼 이벤트
   $("#failure")
     .off("click")
     .on("click", function (e) {

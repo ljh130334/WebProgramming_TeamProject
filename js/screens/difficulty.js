@@ -14,7 +14,7 @@ function initDifficultyScreen() {
     }
   });
 
-  // 난이도 선택 이벤트 (이벤트 위임 방식으로 수정 + 중복 방지)
+  // 난이도 선택 이벤트
   $(document)
     .off("click", ".difficulty-card")
     .on("click", ".difficulty-card", function (e) {
@@ -68,11 +68,6 @@ function handleDifficultySelection($card, difficulty) {
   // 선택 파티클 효과
   if (!window.particlesDisabled) {
     createDifficultySelectionParticles($card);
-  }
-
-  // 효과음 재생
-  if (typeof getSfxVolume === "function") {
-    console.log("난이도 선택 효과음 재생 - 볼륨:", getSfxVolume());
   }
 
   // 선택 데이터 저장
@@ -300,7 +295,6 @@ $("<style>")
       opacity: 0.8;
     }
 
-    /* 선택 중/선택된 카드 스타일 */
     .difficulty-card.selecting {
       opacity: 0.5;
       pointer-events: none;

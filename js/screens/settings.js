@@ -1,4 +1,3 @@
-// 설정 시스템 디버그 버전
 let audioSettings = {
   bgmVolume: 50,
   sfxVolume: 70,
@@ -8,23 +7,16 @@ let audioSettings = {
 
 // 설정 시스템 초기화
 function initSettingsSystem() {
-  console.log("설정 시스템 초기화 시작"); // 디버그 로그
-
   const $optionsBtn = $("#options-btn");
   const $settingsPanel = $("#settings-panel");
   const $settingsClose = $("#settings-close");
   const $mainBgm = $("#main-bgm");
-
-  console.log("옵션 버튼 찾음:", $optionsBtn.length); // 디버그 로그
-  console.log("설정 패널 찾음:", $settingsPanel.length); // 디버그 로그
 
   // 설정 로드
   loadSettings();
 
   // 옵션 버튼 클릭
   $optionsBtn.on("click", function () {
-    console.log("옵션 버튼 클릭됨!"); // 디버그 로그
-
     if ($settingsPanel.is(":visible")) {
       console.log("설정 패널 숨기기");
       hideSettings();
@@ -54,23 +46,13 @@ function initSettingsSystem() {
     }
   });
 
-  // 효과음 볼륨 조절
-  $("#sfx-volume-range").on("input", function () {
-    const volume = $(this).val();
-    audioSettings.sfxVolume = volume;
-    $("#sfx-display").text(volume + "%");
-    saveSettings();
-
-    console.log("효과음 볼륨:", volume + "%");
-  });
-
   // 파티클 효과 토글
   $("#particles-toggle").on("change", function () {
     audioSettings.particlesEnabled = $(this).is(":checked");
     saveSettings();
 
     if (!audioSettings.particlesEnabled) {
-      // 파티클 효과 비활성화 - 기존 파티클 제거
+      // 파티클 효과 비활성화
       $(".fire-particle, .falling-ingredients, .chef-hat").remove();
       showNotification("파티클 효과가 비활성화되었습니다.");
       // 새로운 파티클 생성 중단
@@ -117,8 +99,6 @@ function initSettingsSystem() {
 
   // 배경음악 자동 재생 시도
   setupAutoMusic();
-
-  console.log("설정 시스템 초기화 완료!"); // 디버그 로그
 }
 
 function showSettings() {

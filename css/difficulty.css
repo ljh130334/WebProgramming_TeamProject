@@ -27,7 +27,6 @@
   pointer-events: none;
 }
 
-/* 진행 표시기 */
 #difficulty-select .progress-indicator {
   position: absolute;
   top: 30px;
@@ -57,7 +56,6 @@
   box-shadow: 0 0 20px rgba(255, 255, 255, 0.8);
 }
 
-/* 중앙 컨텐츠 */
 .difficulty-content {
   position: relative;
   z-index: 2;
@@ -69,7 +67,6 @@
   width: 100%;
 }
 
-/* 타이틀 */
 .difficulty-content .title {
   font-size: 48px;
   font-weight: bold;
@@ -104,7 +101,6 @@
   animation: fadeInUp 1s ease-out 0.5s both;
 }
 
-/* 난이도 카드 컨테이너 */
 .difficulty-container {
   display: flex;
   justify-content: center;
@@ -114,7 +110,6 @@
   animation: fadeInUp 1s ease-out 1s both;
 }
 
-/* 난이도 카드 */
 .difficulty-card {
   width: 200px;
   height: 280px;
@@ -145,7 +140,6 @@
   }
 }
 
-/* 난이도별 색상 테마 */
 .difficulty-card.easy {
   border-color: rgba(76, 175, 80, 0.5);
 }
@@ -158,7 +152,6 @@
   border-color: rgba(244, 67, 54, 0.5);
 }
 
-/* 호버 효과 */
 .difficulty-card:hover {
   transform: translateY(-10px) scale(1.05);
   box-shadow: 0 35px 60px rgba(0, 0, 0, 0.4);
@@ -179,7 +172,6 @@
   box-shadow: 0 35px 60px rgba(244, 67, 54, 0.3);
 }
 
-/* 난이도 이미지 */
 .difficulty-image {
   width: 120px;
   height: 120px;
@@ -194,7 +186,6 @@
   transform: scale(1.1) rotate(5deg);
 }
 
-/* 난이도 텍스트 */
 .difficulty-name {
   font-size: 24px;
   font-weight: bold;
@@ -212,14 +203,12 @@
   line-height: 1.4;
 }
 
-/* 선택 중 상태 */
 .difficulty-card.selecting {
   opacity: 0.3;
   transform: scale(0.9);
   pointer-events: none;
 }
 
-/* 선택된 상태 */
 .difficulty-card.selected {
   animation: selectedPulse 1s ease-in-out;
   pointer-events: none;
@@ -235,7 +224,6 @@
   }
 }
 
-/* 애니메이션 */
 @keyframes fadeInUp {
   0% {
     opacity: 0;
@@ -247,41 +235,6 @@
   }
 }
 
-/* 반응형 디자인 */
-@media (max-width: 768px) {
-  .difficulty-container {
-    flex-direction: column;
-    gap: 25px;
-  }
-
-  .difficulty-card {
-    width: 250px;
-    height: 200px;
-  }
-
-  .difficulty-content .title {
-    font-size: 36px;
-  }
-
-  .difficulty-content .subtitle {
-    font-size: 20px;
-  }
-
-  .difficulty-image {
-    width: 80px;
-    height: 80px;
-  }
-
-  .difficulty-name {
-    font-size: 20px;
-  }
-
-  .difficulty-description {
-    font-size: 12px;
-  }
-}
-
-/* 접근성 */
 @media (prefers-reduced-motion: reduce) {
   .difficulty-card,
   .difficulty-content .title,
@@ -294,7 +247,6 @@
   }
 }
 
-/* 애니메이션 비활성화 */
 .no-animations .difficulty-card,
 .no-animations .difficulty-content .title,
 .no-animations .difficulty-content .subtitle {

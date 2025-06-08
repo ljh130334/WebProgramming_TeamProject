@@ -135,7 +135,6 @@ function startBottomFireParticles() {
 
   setInterval(() => {
     if (!window.particlesDisabled) {
-      // 현재 보이는 화면에 따라 파티클 스타일 조정
       const currentScreen = getCurrentVisibleScreen();
       const particleCount = getParticleCountForScreen(currentScreen);
 

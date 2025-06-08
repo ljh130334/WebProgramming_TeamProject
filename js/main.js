@@ -4,7 +4,7 @@ $(document).ready(function () {
   const $gameScreen = $("#game");
   const $startGameBtn = $("#start-game-btn");
 
-  // 게임 시작 버튼 - 부드러운 전환 효과
+  // 게임 시작 버튼
   $startGameBtn.on("click", function () {
     // 클릭 효과
     if (!window.particlesDisabled) {

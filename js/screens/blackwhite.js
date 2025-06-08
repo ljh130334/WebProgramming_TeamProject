@@ -1,4 +1,3 @@
-// 흑백 선택화면 전용 JavaScript
 $(document).ready(function () {
   initBlackWhiteScreen();
 });
@@ -26,7 +25,6 @@ function initBlackWhiteScreen() {
     }
   });
 
-  // 음양 이미지 클릭 시 재미있는 효과
   $(".yinyang-foreground").on("click", function (e) {
     e.preventDefault();
     if (!window.particlesDisabled) {
@@ -60,11 +58,6 @@ function handleSelection(selectedSide) {
   // 선택 파티클 효과 (공통 파티클 재사용)
   if (!window.particlesDisabled) {
     createSelectionParticles($selectedHalf);
-  }
-
-  // 효과음 재생 (설정에서 음량 가져오기)
-  if (typeof getSfxVolume === "function") {
-    console.log("선택 효과음 재생 - 볼륨:", getSfxVolume());
   }
 
   // 선택 데이터 저장
@@ -215,14 +208,13 @@ function createYinYangEffect(x, y) {
     );
 }
 
-// 흑백 화면용 파티클 효과 (테마에 맞게 수정)
+// 흑백 화면용 파티클 효과
 function createBlackWhiteParticles() {
   const blackWhiteParticles = ["⚫", "⚪"];
 
   setInterval(() => {
     if ($("#black-white").is(":visible") && !window.particlesDisabled) {
       for (let i = 0; i < 2; i++) {
-        // 공통 파티클과 겹치지 않게 수량 조절
         const particle =
           blackWhiteParticles[
             Math.floor(Math.random() * blackWhiteParticles.length)
@@ -252,7 +244,7 @@ function createBlackWhiteParticles() {
         }, 6000);
       }
     }
-  }, 3000); // 간격 늘림
+  }, 3000);
 }
 
 // ===========================================
@@ -284,7 +276,6 @@ $("<style>")
       text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
     }
   
-    /* 흑백 화면에서 나가면 전용 파티클 제거 */
     .blackwhite-exclusive {
       transition: opacity 0.3s ease;
     }
