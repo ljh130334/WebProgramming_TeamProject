@@ -60,8 +60,12 @@ function handleSelection(selectedSide) {
     createSelectionParticles($selectedHalf);
   }
 
-  // 선택 데이터 저장
-  sessionStorage.setItem("selectedSide", selectedSide);
+  // 선택 데이터 저장 - localStorage로 변경!
+  localStorage.setItem("selectedSide", selectedSide);
+
+  // 디버깅용 로그
+  console.log("선택됨:", selectedSide);
+  console.log("저장된 값:", localStorage.getItem("selectedSide"));
 
   // 다음 화면으로 전환 (1.5초 후)
   setTimeout(() => {
@@ -69,8 +73,6 @@ function handleSelection(selectedSide) {
     $("#tool-select").show();
     $(document).trigger("screen-changed", ["tool-select"]);
   }, 1500);
-
-  console.log("선택됨:", selectedSide);
 }
 
 // ===========================================
