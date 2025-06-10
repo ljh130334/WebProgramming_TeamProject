@@ -7,8 +7,8 @@ function initDifficultyScreen() {
   $(document).on("screen-changed", function (e, screenId) {
     if (screenId === "difficulty-select") {
       // 현재 단계 초기화 (새로 게임 시작할 때)
-      if (!sessionStorage.getItem("currentStage")) {
-        sessionStorage.setItem("currentStage", "1");
+      if (!localStorage.getItem("currentStage")) {
+        localStorage.setItem("currentStage", "1");
       }
       startDifficultyAnimations();
     }
@@ -74,7 +74,7 @@ function handleDifficultySelection($card, difficulty) {
   if (window.gameData) {
     window.gameData.selectedDifficulty = difficulty;
   }
-  sessionStorage.setItem("selectedDifficulty", difficulty);
+  localStorage.setItem("selectedDifficulty", difficulty);
 
   // 성공 메시지 표시
   showDifficultyMessage(difficulty);
